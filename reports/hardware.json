@@ -1,0 +1,12 @@
+{
+  "architecture": "arm64",
+  "chip": "Apple M4",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)",
+  "dot_product_available": "1",
+  "logical_cpu_count": "10",
+  "memory_bytes": "25769803776",
+  "neon_available": "1",
+  "operating_system": "Darwin",
+  "os_release": "25.5.0",
+  "privacy": "Serial number, UUID, provisioning identifier, user name, and account data intentionally excluded."
+}

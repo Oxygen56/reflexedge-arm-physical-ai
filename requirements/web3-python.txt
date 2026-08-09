@@ -1,0 +1,3 @@
+# Python-installed Web3/security tools.
+slither-analyzer
+mythril

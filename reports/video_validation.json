@@ -1,0 +1,16 @@
+{
+  "audio": "none",
+  "duration_seconds": 57.416667,
+  "size_bytes": 2030142,
+  "source": "Generated only from rights-checked project evidence and entrant-created graphics.",
+  "streams": [
+    {
+      "codec_name": "h264",
+      "height": 1080,
+      "r_frame_rate": "24/1",
+      "width": 1920
+    }
+  ],
+  "third_party_music": "none",
+  "video": "demo/video/reflexedge-evidence-demo.mp4"
+}

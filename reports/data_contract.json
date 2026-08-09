@@ -1,0 +1,42 @@
+{
+  "audits": {
+    "test": {
+      "columns": 149,
+      "duplicate_ids": 0,
+      "feature_count": 144,
+      "missing_values": 0,
+      "out_of_bounds_features": 0,
+      "path": "data/raw/test.csv",
+      "positive_rows": 1128,
+      "rows": 2500,
+      "sha256": "1297cb7c3a6b5be2f190b3c2a833e1028786e8509df9803c58b7dcbd93d60f3e",
+      "wrong_split_rows": 0
+    },
+    "train": {
+      "columns": 149,
+      "duplicate_ids": 0,
+      "feature_count": 144,
+      "missing_values": 0,
+      "out_of_bounds_features": 0,
+      "path": "data/raw/train.csv",
+      "positive_rows": 2595,
+      "rows": 6000,
+      "sha256": "a2928dba355f2167bc2fbd625ea8dd7296efec45a208514592fe9b6b322eb527",
+      "wrong_split_rows": 0
+    },
+    "validation": {
+      "columns": 149,
+      "duplicate_ids": 0,
+      "feature_count": 144,
+      "missing_values": 0,
+      "out_of_bounds_features": 0,
+      "path": "data/raw/validation.csv",
+      "positive_rows": 657,
+      "rows": 1500,
+      "sha256": "53030e3fd82b067c05356202fb759bfb2f8dc27d52cb3a238e303af44927c89d",
+      "wrong_split_rows": 0
+    }
+  },
+  "failures": [],
+  "ok": true
+}

@@ -1,0 +1,56 @@
+{
+  "beams": 64,
+  "feature_layout": "f000-f063 danger; f064-f127 angular proximity; f128-f143 global safety summaries",
+  "features": 144,
+  "generator_seed": 260814,
+  "license": "MIT",
+  "provenance": "Generated entirely by src/generate_dataset.py; no external data.",
+  "splits": {
+    "test": {
+      "path": "data/raw/test.csv",
+      "positive_rate": 0.4512,
+      "positive_rows": 1128,
+      "rows": 2500,
+      "scenario_counts": {
+        "crossing": 439,
+        "dropout": 178,
+        "frontal_approach": 533,
+        "safe": 886,
+        "sudden_intrusion": 464
+      },
+      "seed": 260816,
+      "sha256_rows_without_header": "2e685e9cdd78e87ff3f0c1cacac2d8dffe9741d2b52558e2ef5063dfb61e458c"
+    },
+    "train": {
+      "path": "data/raw/train.csv",
+      "positive_rate": 0.4325,
+      "positive_rows": 2595,
+      "rows": 6000,
+      "scenario_counts": {
+        "crossing": 1006,
+        "dropout": 451,
+        "frontal_approach": 1309,
+        "safe": 2243,
+        "sudden_intrusion": 991
+      },
+      "seed": 260814,
+      "sha256_rows_without_header": "3b4606ad8d5f56d7ae45484dc349179d23e15770bde19e02e6415ed834871041"
+    },
+    "validation": {
+      "path": "data/raw/validation.csv",
+      "positive_rate": 0.438,
+      "positive_rows": 657,
+      "rows": 1500,
+      "scenario_counts": {
+        "crossing": 254,
+        "dropout": 134,
+        "frontal_approach": 339,
+        "safe": 518,
+        "sudden_intrusion": 255
+      },
+      "seed": 260815,
+      "sha256_rows_without_header": "88a26b61e4e5c8dad9bfa4d8abffb6dd939f7f5c59dfbcfd73df3c35992916f2"
+    }
+  },
+  "title": "ReflexEdge deterministic synthetic range-sensor corpus"
+}

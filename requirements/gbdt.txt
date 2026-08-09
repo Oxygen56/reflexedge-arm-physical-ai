@@ -1,0 +1,8 @@
+# Strong tabular competition stack.
+lightgbm
+catboost
+xgboost
+
+# Heavy AutoML baseline; install when the contest is tabular/time-series and disk/time allow.
+# autogluon.tabular
+# autogluon.timeseries

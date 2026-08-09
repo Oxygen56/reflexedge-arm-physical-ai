@@ -1,0 +1,23 @@
+{
+  "failures": [],
+  "ok": true,
+  "required_files": [
+    "README.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md",
+    "reports/brief.md",
+    "reports/baseline_protocol.md",
+    "reports/hardware.json",
+    "reports/baseline.json",
+    "reports/optimized.json",
+    "reports/comparison.json",
+    "reports/comparison.md",
+    "reports/rights_check.json",
+    "artifacts/model.json",
+    "data/raw/dataset_metadata.json",
+    "reports/data_contract.json",
+    "reports/video_validation.json",
+    "demo/video/reflexedge-evidence-demo.mp4",
+    "scripts/reproduce.sh"
+  ]
+}

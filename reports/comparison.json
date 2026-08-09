@@ -1,0 +1,42 @@
+{
+  "accuracy_delta_percentage_points": -0.0400000000000067,
+  "action_disagreements": 3,
+  "additional_false_negatives": 0,
+  "architecture": "arm64",
+  "baseline_engine": "fp32_scalar",
+  "baseline_quality": {
+    "accuracy": 0.9824,
+    "f1": 0.980769231,
+    "false_negative": 6,
+    "precision": 0.967241379,
+    "recall": 0.994680851
+  },
+  "cpu_time_proxy_reduction_percent": 90.25668676471433,
+  "dataset_sha256": "1297cb7c3a6b5be2f190b3c2a833e1028786e8509df9803c58b7dcbd93d60f3e",
+  "energy_statement": "CPU time per inference is an energy proxy. Direct joules were not measured.",
+  "gates": {
+    "accuracy_loss_within_half_point": true,
+    "direct_energy_not_fabricated": true,
+    "optimized_model_is_smaller": true,
+    "optimized_p95_is_faster": true,
+    "real_arm64_hardware": true,
+    "same_dataset_and_rows": true,
+    "zero_added_safety_false_negatives": true
+  },
+  "model_size_reduction_percent": 72.6027397260274,
+  "optimized_engine": "int8_arm_neon",
+  "optimized_quality": {
+    "accuracy": 0.982,
+    "f1": 0.980357922,
+    "false_negative": 5,
+    "precision": 0.965606191,
+    "recall": 0.995567376
+  },
+  "peak_rss_change_percent": 9.97920997920998,
+  "ready_for_claim": true,
+  "repeats": 5000,
+  "rows": 2500,
+  "speedup_p50": 17.778666666666666,
+  "speedup_p95": 6.0415,
+  "throughput_gain_percent": 1817.594419639389
+}

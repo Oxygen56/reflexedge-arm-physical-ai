@@ -1,0 +1,22 @@
+{
+  "engine": "fp32_scalar",
+  "architecture": "arm64",
+  "dataset": "data/processed/test.csv",
+  "rows": 2500,
+  "repeats": 5000,
+  "inferences": 12500000,
+  "latency_ns": {"p50": 208.343750000, "p95": 377.593750000, "p99": 8470.127500000},
+  "throughput_per_second": 479485.297460274,
+  "wall_seconds": 26.069621042,
+  "cpu_seconds": 2.959989000,
+  "cpu_ns_per_inference_energy_proxy": 236.799120000,
+  "peak_rss_bytes": 15761408,
+  "model_bytes": 584,
+  "threshold": 0.490000010,
+  "quality": {"accuracy": 0.982400000, "precision": 0.967241379, "recall": 0.994680851, "f1": 0.980769231, "false_negative": 6},
+  "scalar_vs_int8_action_disagreements": 3,
+  "additional_false_negatives_vs_scalar": 0,
+  "direct_energy_joules": null,
+  "direct_energy_status": "not_measured_requires_supported_meter",
+  "sink": 5754809.500000000
+}

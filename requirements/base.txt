@@ -1,0 +1,17 @@
+# Core contest tooling. Install inside a virtual environment.
+pandas
+numpy
+pyarrow
+polars
+duckdb
+scikit-learn
+optuna
+mlflow
+dvc
+wandb
+hydra-core
+omegaconf
+pandera
+great_expectations
+evidently
+kaggle
