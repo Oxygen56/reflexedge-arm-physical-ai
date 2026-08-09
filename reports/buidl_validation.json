@@ -19,6 +19,9 @@
     "reports/publication_validation.json",
     "reports/video_validation.json",
     "demo/video/reflexedge-evidence-demo.mp4",
-    "scripts/reproduce.sh"
+    "scripts/reproduce.sh",
+    "submissions/devpost-field-map.md",
+    "submissions/devpost-writeup.md",
+    "submissions/video-upload.md"
   ]
 }

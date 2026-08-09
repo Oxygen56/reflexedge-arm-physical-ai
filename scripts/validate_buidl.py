@@ -27,6 +27,9 @@ REQUIRED_FILES = [
     "reports/video_validation.json",
     "demo/video/reflexedge-evidence-demo.mp4",
     "scripts/reproduce.sh",
+    "submissions/devpost-field-map.md",
+    "submissions/devpost-writeup.md",
+    "submissions/video-upload.md",
 ]
 
 
