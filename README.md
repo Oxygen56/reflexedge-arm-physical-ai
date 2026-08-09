@@ -4,7 +4,7 @@
 
 [Interactive evidence demo](https://reflexedge-arm-ai.jiangth99.chatgpt.site) · [57-second evidence video](demo/video/reflexedge-evidence-demo.mp4) · [Measured comparison](reports/comparison.md)
 
-ReflexEdge turns a 64-beam range-sensor frame into a learned collision-risk score and a deterministic `GO`, `HOLD`, or `BRAKE` command. It is designed to make every performance and safety claim reproducible: the repository freezes a scalar FP32 baseline, applies an int8 Arm NEON dot-product optimization, replays the exact same sensor cases through both paths, and retains raw machine-readable evidence.
+ReflexEdge turns a raw 64-beam distance and radial-velocity frame into a learned collision-risk score and a deterministic `GO`, `HOLD`, or `BRAKE` command. It is designed to make every performance and safety claim reproducible: the repository freezes a scalar FP32 baseline, applies fused sensor-front-end and int8 Arm NEON optimizations, replays the exact same sensor cases through both paths, and retains raw machine-readable evidence.
 
 The project targets the [Arm Create: AI Optimization Challenge](https://arm-ai-optimization-challenge.devpost.com/) Physical AI track. It is intentionally not a cloud tuner or a general assistant.
 
@@ -15,10 +15,12 @@ Physical AI optimizations can fail silently: a faster quantized model is useless
 ## Pipeline
 
 ```text
-64-beam range / closing-speed frame
+64-beam distance / radial-velocity frame
               |
               v
 deterministic feature encoder
+  baseline: analytic weights + reference summaries
+  optimized: calibration LUT + one-pass summaries
               |
               v
 learned collision-risk model
@@ -37,7 +39,7 @@ Requirements: an Arm64 macOS or Linux machine, Python 3.11+, and a C++17 compile
 ./scripts/reproduce.sh
 ```
 
-The command regenerates the licensed synthetic sensor corpus, trains and quantizes the model, builds both engines, runs tests, repeats both benchmarks on the same frames, and writes a comparison report under `reports/`.
+The command regenerates the licensed synthetic sensor corpus, trains and quantizes the model, builds both engines, runs tests, runs a final benchmark plus five alternating-order independent paired trials on the same frames, and writes comparison reports under `reports/`.
 
 The final gate also checks anonymous access to the public repository, MIT license, evidence video, and interactive demo. Network access is therefore required only for that last publication check; the core train/build/test/benchmark path is fully local.
 
@@ -60,6 +62,7 @@ To replay visible sensor-to-action events:
 
 - No hardware result is accepted unless `uname -m` is `arm64` or `aarch64`.
 - Baseline and optimized paths use the same dataset, split, model decision threshold, and action policy.
+- The primary latency claim covers in-memory raw distance/velocity input through feature encoding, quantization when applicable, inference, and action-policy evaluation. Physical sensor I/O and actuator transport are not timed.
 - Raw JSON is retained; the Markdown summary is derived from it.
 - Direct energy is reported only when a supported meter is available. CPU time per inference is labeled as an energy proxy, never as joules.
 - Quantization must not introduce a safety-critical false negative in the frozen test corpus.

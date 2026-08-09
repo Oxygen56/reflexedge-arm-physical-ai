@@ -8,11 +8,11 @@ ReflexEdge — An Auditable Arm Physical AI Brake Reflex
 
 ReflexEdge turns deterministic 64-beam range-sensor frames into a learned collision-risk score and a GO, HOLD, or BRAKE action on real Arm64 hardware.
 
-Measured on Apple M4 Arm64 over the same frozen 2,500-row test set and 12.5 million inferences per engine:
+Measured on Apple M4 Arm64 over the same frozen 2,500-row test set. Five alternating-order paired trials, 500,000 raw sensor frames per engine per trial:
 
-- 6.04× faster p95 latency
-- 17.78× faster p50 latency
-- 1,817.6% higher throughput
+- 3.01× median p95 speedup for raw sensor → action
+- 2.83× median p50 speedup
+- 2.76× median throughput speedup
 - 72.60% fewer model bytes
 - zero added false negatives
 

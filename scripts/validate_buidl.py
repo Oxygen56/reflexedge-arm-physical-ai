@@ -24,6 +24,8 @@ REQUIRED_FILES = [
     "data/raw/dataset_metadata.json",
     "reports/data_contract.json",
     "reports/publication_validation.json",
+    "reports/trials.json",
+    "reports/trials.md",
     "reports/video_validation.json",
     "demo/video/reflexedge-evidence-demo.mp4",
     "scripts/reproduce.sh",
@@ -71,6 +73,13 @@ def main() -> None:
             failures.append("demo video is not verified at 1920x1080")
         if video.get("third_party_music") != "none":
             failures.append("demo video music rights are not cleared")
+    trials_path = Path("reports/trials.json")
+    if trials_path.is_file():
+        trials = json.loads(trials_path.read_text(encoding="utf-8"))
+        if not trials.get("ready_for_claim"):
+            failures.append("independent paired benchmark trials have not passed")
+        if int(trials.get("trials", 0)) < 5:
+            failures.append("fewer than five independent benchmark trials")
     publication_path = Path("reports/publication_validation.json")
     if publication_path.is_file():
         publication = json.loads(publication_path.read_text(encoding="utf-8"))

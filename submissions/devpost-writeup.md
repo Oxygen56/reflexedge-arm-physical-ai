@@ -17,22 +17,20 @@ Both paths use the same learned logistic-risk model, decision threshold, test ro
 
 The project contains a rights-clean synthetic sensor generator, deterministic train/validation/test splits, a dependency-free Python trainer and quantizer, two C++17 inference binaries, an Arm64 hardware capture, repeated benchmark harnesses, safety regression tests, a public evidence dashboard, and a 57-second evidence video.
 
-The baseline is compiled with vectorization disabled. The optimized path quantizes features and weights to int8 and uses Arm NEON/DotProd intrinsics for the learned dot product. A one-sided safety bias is calibrated on validation data only; it deliberately favors an extra brake over a missed brake. The test set remains frozen until the final comparison.
+The baseline is compiled with vectorization disabled and uses a reference sensor encoder. The optimized path replaces repeated angular calculations and full sorting with a calibration lookup and one-pass summaries, fuses Arm-vectorized feature quantization, and uses Arm NEON/DotProd intrinsics for the learned dot product. A one-sided safety bias is calibrated on validation data only; it deliberately favors an extra brake over a missed brake. The test set remains frozen until the final comparison.
 
 ## Measured result on Arm
 
-All numbers below come from 12.5 million inferences per engine over the same frozen 2,500-row test set on an Apple M4 Arm64 host with NEON and DotProd available.
+The primary result comes from five independent processes per engine, with execution order alternating to reduce order and thermal bias. Each process evaluates 500,000 raw sensor frames from the same frozen 2,500-row test set on an Apple M4 Arm64 host with NEON and DotProd available.
 
-| Metric | Scalar FP32 | int8 Arm NEON | Change |
+| Raw sensor → action metric | Median speedup | Worst trial | Best trial |
 | --- | ---: | ---: | ---: |
-| p50 latency | 208.34 ns | 11.72 ns | 17.78× faster |
-| p95 latency | 377.59 ns | 62.50 ns | 6.04× faster |
-| throughput | 479,485/s | 9,194,583/s | +1,817.6% |
-| model bytes | 584 | 160 | −72.60% |
-| test accuracy | 98.24% | 98.20% | −0.04 points |
-| false negatives | 6 | 5 | zero added |
+| p50 latency | 2.83× | 2.58× | 3.88× |
+| p95 latency | 3.01× | 2.37× | 4.04× |
+| throughput | 2.76× | 2.58× | 3.77× |
+| CPU-time proxy | 2.80× | 2.56× | 3.78× |
 
-CPU time per inference fell by 90.26% and is labeled only as an energy proxy. We did not measure or claim direct joules. Peak process RSS increased by 9.98%, so the memory reduction claim applies only to model bytes.
+The separate 1.25M-frame final run measured 1,966.12 ns → 402.34 ns p50 and 5,480.60 ns → 700.50 ns p95 for the complete in-memory raw sensor-to-action path. Model bytes fell from 584 to 160 (−72.60%). Test accuracy is 98.24% → 98.20%, false negatives are 6 → 5, and there are zero added false negatives. CPU time per inference is labeled only as an energy proxy; we did not measure or claim direct joules. Peak process RSS increased by 2.60%, so the memory reduction claim applies only to model bytes.
 
 ## Why it can win
 

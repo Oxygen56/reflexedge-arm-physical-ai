@@ -148,12 +148,12 @@ export function ReflexDemo() {
           <p className={styles.eyebrow}>PHYSICAL AI · SENSOR → INFERENCE → ACTION</p>
           <h1>A brake reflex<br />you can audit.</h1>
           <p className={styles.lede}>
-            ReflexEdge turns a 64-beam range frame into a learned collision-risk
+            ReflexEdge turns a raw 64-beam distance and radial-velocity frame into a learned collision-risk
             score and a deterministic actuator command. Every speed and safety
             claim replays from raw evidence on real Arm hardware.
           </p>
           <div className={styles.pipeline} aria-label="Inference pipeline">
-            <span>01 / RANGE FRAME</span><b>→</b><span>02 / INT8 NEON</span><b>→</b><span>03 / BRAKE</span>
+            <span>01 / RAW SENSOR</span><b>→</b><span>02 / FUSED INT8 NEON</span><b>→</b><span>03 / BRAKE</span>
           </div>
           <div className={styles.hardwareStrip}>
             <span>{evidence.hardware.chip}</span>
@@ -209,16 +209,16 @@ export function ReflexDemo() {
       <section className={styles.metricBand} aria-label="Verified benchmark results">
         <div className={styles.metricLead}>
           <span>VERIFIED DELTA</span>
-          <strong>{evidence.benchmark.p95Speedup.toFixed(2)}×</strong>
-          <p>faster p95 inference</p>
+          <strong>{evidence.benchmark.pairedTrialMedian.p95Speedup.toFixed(2)}×</strong>
+          <p>median p95 · raw sensor → action</p>
         </div>
         <Metric
-          label="P95 LATENCY"
+          label="P95 · FINAL RUN"
           before={`${evidence.benchmark.baseline.p95Ns.toFixed(2)} ns`}
           after={`${evidence.benchmark.optimized.p95Ns.toFixed(2)} ns`}
         />
         <Metric
-          label="THROUGHPUT"
+          label="THROUGHPUT · FINAL RUN"
           before={`${compact(evidence.benchmark.baseline.throughput)}/s`}
           after={`${compact(evidence.benchmark.optimized.throughput)}/s`}
         />
@@ -248,12 +248,12 @@ export function ReflexDemo() {
           <ProofCard
             number="01"
             title="Freeze the baseline"
-            text={`${evidence.benchmark.rows.toLocaleString()} unseen test frames. ${evidence.benchmark.repeats.toLocaleString()} repeated passes per engine. Same model threshold and actuator policy.`}
+            text={`${evidence.benchmark.rows.toLocaleString()} unseen test frames. ${evidence.benchmark.trialCount} independent alternating-order paired trials plus a ${evidence.benchmark.repeats.toLocaleString()}-pass final run. Same threshold and actuator policy.`}
           />
           <ProofCard
             number="02"
             title="Change one mechanism"
-            text="Scalar FP32 becomes symmetric int8 with an Arm NEON dot-product kernel. A validation-only safety bias favors an extra brake over a missed brake."
+            text="Reference feature encoding and scalar FP32 become LUT + one-pass summaries, vectorized quantization, and an Arm NEON dot-product kernel. A validation-only safety bias favors an extra brake over a missed brake."
           />
           <ProofCard
             number="03"

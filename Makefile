@@ -20,6 +20,7 @@ benchmark:
 	./build/reflexedge_scalar --dataset data/processed/test.csv --repeat 200 --output reports/baseline.json
 	./build/reflexedge_neon --dataset data/processed/test.csv --repeat 200 --output reports/optimized.json
 	python3 src/compare_results.py
+	python3 scripts/benchmark_trials.py --trials 5 --repeat 200
 
 verify:
 	python3 scripts/rights_check.py

@@ -37,7 +37,11 @@ class PipelineTests(unittest.TestCase):
             self.skipTest("dataset not generated yet")
         with path.open(newline="", encoding="utf-8") as handle:
             row = next(csv.DictReader(handle))
+        distances = [float(row[f"d{index:03d}"]) for index in range(64)]
+        velocities = [float(row[f"v{index:03d}"]) for index in range(64)]
         features = [float(row[f"f{index:03d}"]) for index in range(144)]
+        self.assertTrue(all(0.0 <= value <= 20.0 for value in distances))
+        self.assertTrue(all(-6.1 <= value <= 1.0 for value in velocities))
         self.assertTrue(all(0.0 <= value <= 1.0 for value in features))
         self.assertIn(int(row["label"]), (0, 1))
 
@@ -63,6 +67,31 @@ class PipelineTests(unittest.TestCase):
         events = [json.loads(line) for line in output.splitlines()]
         self.assertEqual(len(events), 3)
         self.assertTrue(all(event["action"] in {"GO", "HOLD", "BRAKE"} for event in events))
+
+    def test_benchmark_covers_raw_sensor_to_action(self) -> None:
+        binary = PROJECT / "build/reflexedge_neon"
+        dataset = PROJECT / "data/processed/test.csv"
+        if not binary.exists() or not dataset.exists():
+            self.skipTest("binary or dataset not built yet")
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "benchmark.json"
+            subprocess.run(
+                [
+                    str(binary),
+                    "--dataset",
+                    str(dataset),
+                    "--repeat",
+                    "2",
+                    "--output",
+                    str(output),
+                ],
+                check=True,
+                stdout=subprocess.DEVNULL,
+            )
+            report = json.loads(output.read_text(encoding="utf-8"))
+        self.assertIn("raw 64-beam distance and velocity", report["end_to_end"]["scope"])
+        self.assertGreater(report["end_to_end"]["inferences"], 0)
+        self.assertGreater(report["end_to_end"]["latency_ns"]["p95"], 0)
 
     def test_non_arm_evidence_is_rejected(self) -> None:
         comparison = PROJECT / "reports/comparison.json"

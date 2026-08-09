@@ -11,9 +11,10 @@ python3 src/train_model.py
 ./scripts/build.sh
 python3 scripts/capture_hardware.py
 python3 -m unittest discover -s tests -v
-./build/reflexedge_scalar --dataset data/processed/test.csv --repeat 5000 --output reports/baseline.json
-./build/reflexedge_neon --dataset data/processed/test.csv --repeat 5000 --output reports/optimized.json
+./build/reflexedge_scalar --dataset data/processed/test.csv --repeat 500 --output reports/baseline.json
+./build/reflexedge_neon --dataset data/processed/test.csv --repeat 500 --output reports/optimized.json
 python3 src/compare_results.py
+python3 scripts/benchmark_trials.py --trials 5 --repeat 200
 python3 scripts/build_demo_evidence.py
 python3 scripts/rights_check.py
 python3 scripts/validate_publication.py

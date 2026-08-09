@@ -11,17 +11,61 @@
     "precision": 0.967241379,
     "recall": 0.994680851
   },
-  "cpu_time_proxy_reduction_percent": 90.25668676471433,
-  "dataset_sha256": "1297cb7c3a6b5be2f190b3c2a833e1028786e8509df9803c58b7dcbd93d60f3e",
+  "benchmark_scope": {
+    "kernel": "model inference only; features are pre-encoded and CSV loading is excluded",
+    "pipeline": "raw 64-beam distance and velocity input through feature encoding, quantization when applicable, model inference, and GO/HOLD/BRAKE policy"
+  },
+  "cpu_time_proxy_reduction_percent": 96.8462049594358,
+  "dataset_sha256": "40c9395be7cc2ea20cbcd2b288d83e15e6ad9e378bbee5e9202e26cb0c6d0b26",
   "energy_statement": "CPU time per inference is an energy proxy. Direct joules were not measured.",
   "gates": {
     "accuracy_loss_within_half_point": true,
     "direct_energy_not_fabricated": true,
+    "independent_trials_ready": true,
     "optimized_model_is_smaller": true,
     "optimized_p95_is_faster": true,
+    "optimized_pipeline_p95_is_faster": true,
+    "optimized_pipeline_throughput_is_higher": true,
     "real_arm64_hardware": true,
     "same_dataset_and_rows": true,
     "zero_added_safety_false_negatives": true
+  },
+  "independent_trials": {
+    "kernel_p50_speedup": {
+      "maximum": 29.940119760479043,
+      "median": 21.45508982035928,
+      "minimum": 16.38719512195122
+    },
+    "kernel_p95_speedup": {
+      "maximum": 36.29688995215311,
+      "median": 16.84131736526946,
+      "minimum": 6.3973128598848366
+    },
+    "kernel_throughput_speedup": {
+      "maximum": 25.481716059268653,
+      "median": 18.77650870103093,
+      "minimum": 11.41837638032522
+    },
+    "pipeline_cpu_proxy_speedup": {
+      "maximum": 3.7827722133933572,
+      "median": 2.7991399134716577,
+      "minimum": 2.5558309564937933
+    },
+    "pipeline_p50_speedup": {
+      "maximum": 3.879860465116279,
+      "median": 2.8277467411545625,
+      "minimum": 2.5784898806434873
+    },
+    "pipeline_p95_speedup": {
+      "maximum": 4.0415042421462966,
+      "median": 3.0120481927710845,
+      "minimum": 2.371628655085712
+    },
+    "pipeline_throughput_speedup": {
+      "maximum": 3.7727176194108867,
+      "median": 2.7592832107813794,
+      "minimum": 2.582123928835205
+    }
   },
   "model_size_reduction_percent": 72.6027397260274,
   "optimized_engine": "int8_arm_neon",
@@ -32,11 +76,15 @@
     "precision": 0.965606191,
     "recall": 0.995567376
   },
-  "peak_rss_change_percent": 9.97920997920998,
+  "peak_rss_change_percent": 2.5974025974025974,
+  "pipeline_cpu_time_proxy_reduction_percent": 78.03413888098581,
+  "pipeline_speedup_p50": 4.886679611650486,
+  "pipeline_speedup_p95": 7.823837883654532,
+  "pipeline_throughput_gain_percent": 569.92758839655,
   "ready_for_claim": true,
-  "repeats": 5000,
+  "repeats": 500,
   "rows": 2500,
-  "speedup_p50": 17.778666666666666,
-  "speedup_p95": 6.0415,
-  "throughput_gain_percent": 1817.594419639389
+  "speedup_p50": 46.832,
+  "speedup_p95": 76.03873826903023,
+  "throughput_gain_percent": 6256.355432067076
 }

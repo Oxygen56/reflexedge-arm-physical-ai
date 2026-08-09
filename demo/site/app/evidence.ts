@@ -8,28 +8,36 @@ export const evidence = {
       "accuracy": 0.9824,
       "falseNegatives": 6,
       "modelBytes": 584,
-      "p50Ns": 208.34375,
-      "p95Ns": 377.59375,
+      "p50Ns": 1966.125,
+      "p95Ns": 5480.5984375,
       "recall": 0.994680851,
-      "throughput": 479485.297460274
+      "throughput": 330871.816162755
     },
-    "cpuProxyReductionPercent": 90.25668676471433,
-    "datasetSha256": "1297cb7c3a6b5be2f190b3c2a833e1028786e8509df9803c58b7dcbd93d60f3e",
+    "cpuProxyReductionPercent": 78.03413888098581,
+    "datasetSha256": "40c9395be7cc2ea20cbcd2b288d83e15e6ad9e378bbee5e9202e26cb0c6d0b26",
+    "inferencesPerEnginePerTrial": 500000,
     "modelReductionPercent": 72.6027397260274,
     "optimized": {
       "accuracy": 0.982,
       "falseNegatives": 5,
       "modelBytes": 160,
-      "p50Ns": 11.71875,
-      "p95Ns": 62.5,
+      "p50Ns": 402.34375,
+      "p95Ns": 700.5,
       "recall": 0.995567376,
-      "throughput": 9194583.30708954
+      "throughput": 2216601.578703011
     },
-    "p50Speedup": 17.778666666666666,
-    "p95Speedup": 6.0415,
-    "repeats": 5000,
+    "p50Speedup": 4.886679611650486,
+    "p95Speedup": 7.823837883654532,
+    "pairedTrialMedian": {
+      "cpuProxySpeedup": 2.7991399134716577,
+      "p50Speedup": 2.8277467411545625,
+      "p95Speedup": 3.0120481927710845,
+      "throughputSpeedup": 2.7592832107813794
+    },
+    "repeats": 500,
     "rows": 2500,
-    "throughputGainPercent": 1817.594419639389
+    "throughputGainPercent": 569.92758839655,
+    "trialCount": 5
   },
   "dataset": {
     "license": "MIT",

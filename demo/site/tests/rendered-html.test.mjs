@@ -31,7 +31,8 @@ test("server-renders the ReflexEdge evidence demo", async () => {
   assert.match(html, /<title>ReflexEdge — Verifiable Physical AI on Arm<\/title>/i);
   assert.match(html, /A brake reflex/);
   assert.match(html, /VERIFIED ARM64 RUN/);
-  assert.match(html, /6\.04/);
+  assert.match(html, /3\.01/);
+  assert.match(html, /raw sensor → action/);
   assert.match(html, /ADDED FALSE NEGATIVES/);
   assert.match(html, /One command/);
   assert.match(html, /CLAIM BOUNDARY/);

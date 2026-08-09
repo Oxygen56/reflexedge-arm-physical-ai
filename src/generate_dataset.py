@@ -22,7 +22,9 @@ def clamp(value: float, low: float = 0.0, high: float = 1.0) -> float:
     return max(low, min(high, value))
 
 
-def make_frame(rng: random.Random, scenario: str) -> tuple[list[float], int, float]:
+def make_frame(
+    rng: random.Random, scenario: str
+) -> tuple[list[float], list[float], list[float], int, float]:
     distances = [rng.uniform(5.5, 14.0) for _ in range(BEAMS)]
     velocities = [rng.uniform(-0.25, 0.25) for _ in range(BEAMS)]
 
@@ -100,7 +102,7 @@ def make_frame(rng: random.Random, scenario: str) -> tuple[list[float], int, flo
     features.extend(summary)
     truth_score = max(danger_values)
     label = int(truth_score >= 0.205 or nearest_central < 0.52)
-    return features, label, min_ttc
+    return distances, velocities, features, label, min_ttc
 
 
 def split_scenario(rng: random.Random) -> str:
@@ -118,9 +120,12 @@ def split_scenario(rng: random.Random) -> str:
 
 def write_split(path: Path, split: str, count: int, seed: int) -> dict[str, object]:
     rng = random.Random(seed)
-    fields = ["sample_id", "split", "scenario", "label", "min_ttc"] + [
-        f"f{i:03d}" for i in range(FEATURES)
-    ]
+    fields = (
+        ["sample_id", "split", "scenario", "label", "min_ttc"]
+        + [f"d{i:03d}" for i in range(BEAMS)]
+        + [f"v{i:03d}" for i in range(BEAMS)]
+        + [f"f{i:03d}" for i in range(FEATURES)]
+    )
     label_count = 0
     scenario_counts = {name: 0 for name in SCENARIOS}
     digest = hashlib.sha256()
@@ -130,7 +135,7 @@ def write_split(path: Path, split: str, count: int, seed: int) -> dict[str, obje
         writer.writerow(fields)
         for index in range(count):
             scenario = split_scenario(rng)
-            features, label, min_ttc = make_frame(rng, scenario)
+            distances, velocities, features, label, min_ttc = make_frame(rng, scenario)
             label_count += label
             scenario_counts[scenario] += 1
             row = [
@@ -139,6 +144,8 @@ def write_split(path: Path, split: str, count: int, seed: int) -> dict[str, obje
                 scenario,
                 label,
                 f"{min_ttc:.6f}",
+                *[f"{value:.8f}" for value in distances],
+                *[f"{value:.8f}" for value in velocities],
                 *[f"{value:.8f}" for value in features],
             ]
             line = ",".join(map(str, row)) + "\n"
@@ -182,6 +189,7 @@ def main() -> None:
         "generator_seed": args.seed,
         "beams": BEAMS,
         "features": FEATURES,
+        "raw_sensor_layout": "d000-d063 distance in meters; v000-v063 radial velocity in meters per second (negative is closing)",
         "feature_layout": "f000-f063 danger; f064-f127 angular proximity; f128-f143 global safety summaries",
         "splits": splits,
     }

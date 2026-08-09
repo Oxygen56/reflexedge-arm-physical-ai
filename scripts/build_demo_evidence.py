@@ -50,6 +50,7 @@ def main() -> None:
     hardware = json.loads((ROOT / "reports/hardware.json").read_text(encoding="utf-8"))
     model = json.loads((ROOT / "artifacts/model.json").read_text(encoding="utf-8"))
     metadata = json.loads((ROOT / "data/raw/dataset_metadata.json").read_text(encoding="utf-8"))
+    trials = json.loads((ROOT / "reports/trials.json").read_text(encoding="utf-8"))
 
     with (ROOT / "data/raw/test.csv").open(newline="", encoding="utf-8") as handle:
         rows = list(csv.DictReader(handle))
@@ -81,10 +82,10 @@ def main() -> None:
 
     public = {
         "benchmark": {
-            "p50Speedup": comparison["speedup_p50"],
-            "p95Speedup": comparison["speedup_p95"],
-            "throughputGainPercent": comparison["throughput_gain_percent"],
-            "cpuProxyReductionPercent": comparison["cpu_time_proxy_reduction_percent"],
+            "p50Speedup": comparison["pipeline_speedup_p50"],
+            "p95Speedup": comparison["pipeline_speedup_p95"],
+            "throughputGainPercent": comparison["pipeline_throughput_gain_percent"],
+            "cpuProxyReductionPercent": comparison["pipeline_cpu_time_proxy_reduction_percent"],
             "modelReductionPercent": comparison["model_size_reduction_percent"],
             "accuracyDeltaPoints": comparison["accuracy_delta_percentage_points"],
             "actionDisagreements": comparison["action_disagreements"],
@@ -92,19 +93,27 @@ def main() -> None:
             "datasetSha256": comparison["dataset_sha256"],
             "rows": comparison["rows"],
             "repeats": comparison["repeats"],
+            "trialCount": trials["trials"],
+            "inferencesPerEnginePerTrial": trials["inferences_per_engine_per_trial"],
+            "pairedTrialMedian": {
+                "p50Speedup": trials["summary"]["pipeline_p50_speedup"]["median"],
+                "p95Speedup": trials["summary"]["pipeline_p95_speedup"]["median"],
+                "throughputSpeedup": trials["summary"]["pipeline_throughput_speedup"]["median"],
+                "cpuProxySpeedup": trials["summary"]["pipeline_cpu_proxy_speedup"]["median"],
+            },
             "baseline": {
-                "p50Ns": baseline["latency_ns"]["p50"],
-                "p95Ns": baseline["latency_ns"]["p95"],
-                "throughput": baseline["throughput_per_second"],
+                "p50Ns": baseline["end_to_end"]["latency_ns"]["p50"],
+                "p95Ns": baseline["end_to_end"]["latency_ns"]["p95"],
+                "throughput": baseline["end_to_end"]["throughput_per_second"],
                 "modelBytes": baseline["model_bytes"],
                 "accuracy": comparison["baseline_quality"]["accuracy"],
                 "recall": comparison["baseline_quality"]["recall"],
                 "falseNegatives": comparison["baseline_quality"]["false_negative"],
             },
             "optimized": {
-                "p50Ns": optimized["latency_ns"]["p50"],
-                "p95Ns": optimized["latency_ns"]["p95"],
-                "throughput": optimized["throughput_per_second"],
+                "p50Ns": optimized["end_to_end"]["latency_ns"]["p50"],
+                "p95Ns": optimized["end_to_end"]["latency_ns"]["p95"],
+                "throughput": optimized["end_to_end"]["throughput_per_second"],
                 "modelBytes": optimized["model_bytes"],
                 "accuracy": comparison["optimized_quality"]["accuracy"],
                 "recall": comparison["optimized_quality"]["recall"],

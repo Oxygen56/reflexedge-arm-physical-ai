@@ -1,0 +1,132 @@
+{
+  "binary_sha256": {
+    "baseline": "b3494083e7863786a3c179adbfb7a4398ccc1ade15270bae3f3d10f507fdb214",
+    "optimized": "ad57b3f3b032e8a536535333a3404828d39a5c06511097a340a186d59518f8aa"
+  },
+  "dataset_sha256": "40c9395be7cc2ea20cbcd2b288d83e15e6ad9e378bbee5e9202e26cb0c6d0b26",
+  "gates": {
+    "all_trials_kernel_p95_faster": true,
+    "all_trials_pipeline_p95_faster": true,
+    "all_trials_pipeline_throughput_faster": true,
+    "all_trials_zero_added_false_negatives": true
+  },
+  "inferences_per_engine_per_trial": 500000,
+  "model_sha256": "b2be6277318a3cfe44c3d5eeb24c3fa0afdbbc6a2be0d7cf56929a93ff9a91c7",
+  "pairs": [
+    {
+      "additional_false_negatives": 0,
+      "kernel_p50_speedup": 21.45508982035928,
+      "kernel_p95_speedup": 18.54066985645933,
+      "kernel_throughput_speedup": 18.77650870103093,
+      "order": [
+        "reflexedge_scalar",
+        "reflexedge_neon"
+      ],
+      "pipeline_cpu_proxy_speedup": 2.7991399134716577,
+      "pipeline_p50_speedup": 2.8277467411545625,
+      "pipeline_p95_speedup": 3.0120481927710845,
+      "pipeline_throughput_speedup": 2.7592832107813794,
+      "trial": 1
+    },
+    {
+      "additional_false_negatives": 0,
+      "kernel_p50_speedup": 28.940119760479043,
+      "kernel_p95_speedup": 36.29688995215311,
+      "kernel_throughput_speedup": 25.481716059268653,
+      "order": [
+        "reflexedge_neon",
+        "reflexedge_scalar"
+      ],
+      "pipeline_cpu_proxy_speedup": 3.7827722133933572,
+      "pipeline_p50_speedup": 3.879860465116279,
+      "pipeline_p95_speedup": 4.0415042421462966,
+      "pipeline_throughput_speedup": 3.7727176194108867,
+      "trial": 2
+    },
+    {
+      "additional_false_negatives": 0,
+      "kernel_p50_speedup": 17.26726726726727,
+      "kernel_p95_speedup": 6.3973128598848366,
+      "kernel_throughput_speedup": 11.41837638032522,
+      "order": [
+        "reflexedge_scalar",
+        "reflexedge_neon"
+      ],
+      "pipeline_cpu_proxy_speedup": 2.610349500810417,
+      "pipeline_p50_speedup": 2.695257142857143,
+      "pipeline_p95_speedup": 2.371628655085712,
+      "pipeline_throughput_speedup": 2.6136733910207077,
+      "trial": 3
+    },
+    {
+      "additional_false_negatives": 0,
+      "kernel_p50_speedup": 16.38719512195122,
+      "kernel_p95_speedup": 15.778666666666666,
+      "kernel_throughput_speedup": 15.280232147585842,
+      "order": [
+        "reflexedge_neon",
+        "reflexedge_scalar"
+      ],
+      "pipeline_cpu_proxy_speedup": 2.5558309564937933,
+      "pipeline_p50_speedup": 2.5784898806434873,
+      "pipeline_p95_speedup": 2.770573017008862,
+      "pipeline_throughput_speedup": 2.582123928835205,
+      "trial": 4
+    },
+    {
+      "additional_false_negatives": 0,
+      "kernel_p50_speedup": 29.940119760479043,
+      "kernel_p95_speedup": 16.84131736526946,
+      "kernel_throughput_speedup": 20.307269006407186,
+      "order": [
+        "reflexedge_scalar",
+        "reflexedge_neon"
+      ],
+      "pipeline_cpu_proxy_speedup": 3.0497641352734037,
+      "pipeline_p50_speedup": 3.157096102350491,
+      "pipeline_p95_speedup": 3.052831683168317,
+      "pipeline_throughput_speedup": 3.0162326240712334,
+      "trial": 5
+    }
+  ],
+  "ready_for_claim": true,
+  "repeat_per_trial": 200,
+  "summary": {
+    "kernel_p50_speedup": {
+      "maximum": 29.940119760479043,
+      "median": 21.45508982035928,
+      "minimum": 16.38719512195122
+    },
+    "kernel_p95_speedup": {
+      "maximum": 36.29688995215311,
+      "median": 16.84131736526946,
+      "minimum": 6.3973128598848366
+    },
+    "kernel_throughput_speedup": {
+      "maximum": 25.481716059268653,
+      "median": 18.77650870103093,
+      "minimum": 11.41837638032522
+    },
+    "pipeline_cpu_proxy_speedup": {
+      "maximum": 3.7827722133933572,
+      "median": 2.7991399134716577,
+      "minimum": 2.5558309564937933
+    },
+    "pipeline_p50_speedup": {
+      "maximum": 3.879860465116279,
+      "median": 2.8277467411545625,
+      "minimum": 2.5784898806434873
+    },
+    "pipeline_p95_speedup": {
+      "maximum": 4.0415042421462966,
+      "median": 3.0120481927710845,
+      "minimum": 2.371628655085712
+    },
+    "pipeline_throughput_speedup": {
+      "maximum": 3.7727176194108867,
+      "median": 2.7592832107813794,
+      "minimum": 2.582123928835205
+    }
+  },
+  "trials": 5
+}

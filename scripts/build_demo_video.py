@@ -77,6 +77,28 @@ def header(step: str) -> str:
     )
 
 
+def social_scene(comparison: dict) -> str:
+    trial_p95 = comparison["independent_trials"]["pipeline_p95_speedup"]["median"]
+    body = header("ARM64 / PHYSICAL AI")
+    body += text(74, 275, "A BRAKE REFLEX", 112, "#f4f6f8", 700)
+    body += text(74, 400, "YOU CAN AUDIT.", 112, LIME, 700)
+    body += '<rect x="74" y="510" width="1050" height="100" fill="#0d1117" stroke="' + LIME + '"/>'
+    body += text(112, 575, f"{trial_p95:.2f}× MEDIAN P95 · 0 ADDED FALSE NEGATIVES", 30, LIME, 700, "Menlo,monospace")
+    body += text(74, 700, "RAW 64-BEAM SENSOR → FUSED INT8 NEON → BRAKE", 26, VIOLET, 650, "Menlo,monospace", spacing=1)
+    center_x, center_y, radius = 1510, 890, 480
+    for index in range(33):
+        angle = math.pi + index / 32 * math.pi
+        end_x = center_x + math.cos(angle) * radius
+        end_y = center_y + math.sin(angle) * radius
+        color = RED if 13 <= index <= 19 else VIOLET
+        opacity = .88 if 13 <= index <= 19 else .35
+        body += f'<line x1="{center_x}" y1="{center_y}" x2="{end_x:.1f}" y2="{end_y:.1f}" stroke="{color}" stroke-opacity="{opacity}" stroke-width="{4 if 13 <= index <= 19 else 2}"/>'
+    body += f'<rect x="1450" y="865" width="120" height="55" rx="6" fill="{LIME}"/>'
+    body += text(1510, 900, "ACTUATOR", 14, BG, 700, "Menlo,monospace", anchor="middle")
+    body += text(74, 980, "REFLEXEDGE · REAL APPLE M4 ARM64 · MIT", 22, MUTED, 600, "Menlo,monospace")
+    return svg_document(body)
+
+
 def render_svg(name: str, source: str) -> Path:
     svg_path = FRAME_DIR / f"{name}.svg"
     png_path = FRAME_DIR / f"{name}.png"
@@ -128,7 +150,7 @@ def radar_scene(row: dict[str, str], model: dict, number: int) -> str:
     body = header(f"LIVE REPLAY / {number:02d}")
     body += text(74, 170, "SENSOR → MODEL → ACTUATOR", 20, LIME, 600, "Menlo,monospace", spacing=3)
     body += text(74, 260, scenario, 72, "#f4f6f8", 650)
-    body += text(74, 318, f"FRAME {row['sample_id']} · 64 RANGE BEAMS", 18, MUTED, 600, "Menlo,monospace")
+    body += text(74, 318, f"FRAME {row['sample_id']} · 64 DISTANCE + VELOCITY BEAMS", 18, MUTED, 600, "Menlo,monospace")
     body += '<rect x="74" y="400" width="430" height="250" fill="#0d1117" stroke="#27313c"/>'
     body += text(106, 450, "OPTIMIZED RISK", 16, MUTED, 600, "Menlo,monospace", spacing=2)
     body += text(106, 555, f"{value * 100:.1f}%", 106, command_color, 700, "Menlo,monospace")
@@ -145,13 +167,13 @@ def radar_scene(row: dict[str, str], model: dict, number: int) -> str:
 
 def metric_scene(comparison: dict, baseline: dict, optimized: dict) -> str:
     body = header("02 / OPTIMIZATION DELTA")
-    body += text(74, 200, "THE SAME FRAMES.", 72, "#f4f6f8", 620)
-    body += text(74, 286, "A DIFFERENT KERNEL.", 72, LIME, 620)
+    body += text(74, 200, "THE SAME RAW FRAMES.", 72, "#f4f6f8", 620)
+    body += text(74, 286, "A FUSED ARM PIPELINE.", 72, LIME, 620)
     cards = [
-        ("P95 LATENCY", f"{baseline['latency_ns']['p95']:.2f} ns", f"{optimized['latency_ns']['p95']:.2f} ns", f"{comparison['speedup_p95']:.2f}× FASTER"),
-        ("THROUGHPUT", f"{baseline['throughput_per_second']/1e6:.2f}M/s", f"{optimized['throughput_per_second']/1e6:.2f}M/s", f"+{comparison['throughput_gain_percent']:.0f}%"),
+        ("P95 · FINAL RUN", f"{baseline['end_to_end']['latency_ns']['p95']:.2f} ns", f"{optimized['end_to_end']['latency_ns']['p95']:.2f} ns", f"{comparison['pipeline_speedup_p95']:.2f}× FASTER"),
+        ("THROUGHPUT · FINAL", f"{baseline['end_to_end']['throughput_per_second']/1e6:.2f}M/s", f"{optimized['end_to_end']['throughput_per_second']/1e6:.2f}M/s", f"+{comparison['pipeline_throughput_gain_percent']:.0f}%"),
         ("MODEL BYTES", str(baseline['model_bytes']), str(optimized['model_bytes']), f"−{comparison['model_size_reduction_percent']:.1f}%"),
-        ("CPU-TIME PROXY", f"{baseline['cpu_ns_per_inference_energy_proxy']:.1f} ns", f"{optimized['cpu_ns_per_inference_energy_proxy']:.1f} ns", f"−{comparison['cpu_time_proxy_reduction_percent']:.1f}%"),
+        ("CPU PROXY · FINAL", f"{baseline['end_to_end']['cpu_ns_per_inference_energy_proxy']:.1f} ns", f"{optimized['end_to_end']['cpu_ns_per_inference_energy_proxy']:.1f} ns", f"−{comparison['pipeline_cpu_time_proxy_reduction_percent']:.1f}%"),
     ]
     for index, (label, before, after, delta) in enumerate(cards):
         x = 74 + index * 445
@@ -161,8 +183,10 @@ def metric_scene(comparison: dict, baseline: dict, optimized: dict) -> str:
         body += f'<line x1="{x+28}" y1="550" x2="{x+210}" y2="550" stroke="#56616d" stroke-width="2"/>'
         body += text(x + 28, 650, after, 55, "#f4f6f8", 650, "Menlo,monospace")
         body += text(x + 28, 746, delta, 27, LIME, 700, "Menlo,monospace")
-    body += text(74, 910, "12.5M INFERENCES PER ENGINE · FROZEN 2,500-ROW TEST SET", 20, VIOLET, 600, "Menlo,monospace", spacing=2)
-    body += text(74, 965, "Peak process RSS increased 10.0%; only model-byte reduction is claimed.", 18, MUTED, 500)
+    median_p95 = comparison["independent_trials"]["pipeline_p95_speedup"]["median"]
+    body += text(74, 900, f"5 PAIRED PROCESS TRIALS · MEDIAN RAW-TO-ACTION P95 {median_p95:.2f}×", 20, VIOLET, 600, "Menlo,monospace", spacing=2)
+    body += text(74, 948, "Final run: 1.25M frames per engine. Physical sensor I/O and actuator transport excluded.", 18, MUTED, 500)
+    body += text(74, 985, "Peak process RSS increased 2.6%; only model-byte reduction is claimed.", 18, MUTED, 500)
     return svg_document(body)
 
 
@@ -236,12 +260,9 @@ def main() -> None:
     FRAME_DIR.mkdir(parents=True, exist_ok=True)
     scenes: list[tuple[Path, float]] = []
 
+    social_frame = render_svg("00-social", social_scene(comparison))
     social = ROOT / "demo/site/public/og.png"
-    social_frame = FRAME_DIR / "00-social.png"
-    subprocess.run(
-        ["magick", str(social), "-resize", f"{WIDTH}x{HEIGHT}^", "-gravity", "center", "-extent", f"{WIDTH}x{HEIGHT}", str(social_frame)],
-        check=True,
-    )
+    shutil.copyfile(social_frame, social)
     scenes.append((social_frame, 5.0))
 
     targets = [

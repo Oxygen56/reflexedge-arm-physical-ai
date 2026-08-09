@@ -3,7 +3,7 @@
 ## Entrant-created material
 
 - Project architecture, source code, generated synthetic sensor data, benchmark harness, reports, and demo composition are created for this submission.
-- The evidence video is generated from the project's rights-checked sensor frames, local benchmark JSON, entrant-created typography/layout, and the project social card. It contains no music, voice, stock footage, third-party logo, or personal footage.
+- The evidence video and social card are generated deterministically by `scripts/build_demo_video.py` from rights-checked sensor frames and benchmark JSON. They contain no music, voice, stock footage, third-party logo, or personal footage.
 - Project source and generated assets are offered under MIT.
 - No employer, client, or confidential repository material is included.
 
@@ -19,8 +19,8 @@ This text must not be submitted automatically if the form wording or requested s
 
 ## Publication checklist
 
-- [ ] Repository is public and shows MIT in the GitHub About/license surface.
-- [ ] No keys, tokens, personal identifiers, device serials, private footage, or private paths are committed.
-- [ ] All optional media is entrant-created or separately licensed.
-- [ ] Raw hardware logs exclude serial number, hardware UUID, provisioning identifier, and account data.
+- [x] Repository is public and anonymously exposes the MIT license.
+- [x] Automated scanning found no keys, tokens, personal identifiers, device serials, private footage, or private paths in the submission package.
+- [x] All optional media is generated from entrant-created project evidence.
+- [x] Raw hardware evidence excludes serial number, hardware UUID, provisioning identifier, and account data.
 - [ ] Actual Devpost AI/tool disclosure is read and answered before final submission.

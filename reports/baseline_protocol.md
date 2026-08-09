@@ -15,12 +15,16 @@ On the same Arm64 host and the same frozen sensor frames, an int8 Arm NEON infer
 
 ## Baseline
 
+- Raw 64-beam distance and radial-velocity input.
+- Reference feature encoder recomputes analytic angular weights and uses a full ordering for top-danger summaries.
 - FP32 learned linear risk model.
 - Scalar accumulation built with loop and SLP vectorization disabled.
 - Same sigmoid, threshold, and action policy as the optimized engine.
 
 ## Optimized variant
 
+- Precomputed calibration lookup for fixed beam angles and one-pass top-danger summaries.
+- Fused Arm-vectorized feature quantization.
 - Symmetric int8 quantization for features and learned weights.
 - Arm NEON dot product using 16-byte vectors; dot-product extension when available.
 - Scale restored before the same sigmoid, threshold, and policy.
@@ -28,7 +32,9 @@ On the same Arm64 host and the same frozen sensor frames, an int8 Arm NEON infer
 
 ## Measurements
 
-- p50, p95, and p99 latency per inference from repeated timed batches.
+- Primary p50, p95, p99, and throughput cover raw in-memory sensor arrays through feature encoding, quantization when applicable, model inference, and action-policy evaluation.
+- A separately labeled model-kernel microbenchmark excludes CSV loading and feature encoding.
+- Five independent paired processes alternate engine order; the median is the headline result and every trial must improve end-to-end p95 and throughput.
 - Throughput in inferences per second.
 - CPU time per inference as an energy proxy.
 - Peak resident memory and model byte count.
@@ -44,3 +50,4 @@ Direct energy in joules is outside the initial claim. It may be added only from 
 4. Accuracy loss is no more than 0.5 percentage points.
 5. Performance and memory claims are generated from raw JSON, not manually typed.
 6. A negative control proves the validator rejects a corrupted or non-Arm evidence bundle.
+7. Every independent trial improves raw sensor-to-action p95 and throughput.

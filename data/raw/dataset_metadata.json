@@ -5,6 +5,7 @@
   "generator_seed": 260814,
   "license": "MIT",
   "provenance": "Generated entirely by src/generate_dataset.py; no external data.",
+  "raw_sensor_layout": "d000-d063 distance in meters; v000-v063 radial velocity in meters per second (negative is closing)",
   "splits": {
     "test": {
       "path": "data/raw/test.csv",
@@ -19,7 +20,7 @@
         "sudden_intrusion": 464
       },
       "seed": 260816,
-      "sha256_rows_without_header": "2e685e9cdd78e87ff3f0c1cacac2d8dffe9741d2b52558e2ef5063dfb61e458c"
+      "sha256_rows_without_header": "ef2ecc4d7629743f8d0d698ae376a2932a0122aed37726e98cf7041334ad9789"
     },
     "train": {
       "path": "data/raw/train.csv",
@@ -34,7 +35,7 @@
         "sudden_intrusion": 991
       },
       "seed": 260814,
-      "sha256_rows_without_header": "3b4606ad8d5f56d7ae45484dc349179d23e15770bde19e02e6415ed834871041"
+      "sha256_rows_without_header": "9ee58d45215a61e08cfcbddea30393e04ebaadbb6364445af97a0e734d7b877c"
     },
     "validation": {
       "path": "data/raw/validation.csv",
@@ -49,7 +50,7 @@
         "sudden_intrusion": 255
       },
       "seed": 260815,
-      "sha256_rows_without_header": "88a26b61e4e5c8dad9bfa4d8abffb6dd939f7f5c59dfbcfd73df3c35992916f2"
+      "sha256_rows_without_header": "208dedf39e8d19373a06c174d5a8123e43c4e8526f5ed57d3974310f028dda91"
     }
   },
   "title": "ReflexEdge deterministic synthetic range-sensor corpus"

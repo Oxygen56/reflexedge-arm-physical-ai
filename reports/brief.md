@@ -42,6 +42,7 @@ ReflexEdge is a safety-oriented, judge-replayable Physical AI system: range-sens
 
 - Official deadline and live Join availability were reconfirmed on 2026-08-10; joining awaits the required click-time confirmation.
 - The full sensor-to-action pipeline runs on a real Apple M4 Arm64 host with NEON and DotProd available.
-- The frozen 2,500-row test replay shows 6.04× faster p95 latency, 17.78× faster p50 latency, 1,817.6% higher throughput, and 72.60% fewer model bytes.
-- Optimized test accuracy is 98.20% versus 98.24% baseline, with zero added false negatives. Peak process RSS increased 9.98%; direct joules were not measured.
+- Five independent, alternating-order paired trials show median raw sensor-to-action speedups of 2.83× p50, 3.01× p95, and 2.76× throughput; every trial improved p95 and throughput.
+- The 1.25M-inference final run shows 1,966.12 ns → 402.34 ns p50 and 5,480.60 ns → 700.50 ns p95 for the raw sensor-to-action path. Model bytes fall 72.60%.
+- Optimized test accuracy is 98.20% versus 98.24% baseline, with zero added false negatives. Final-run peak process RSS increased 2.60%; direct joules were not measured.
 - Tests, data audit, rights gate, public replay site, and a 57-second evidence video are complete locally. Public hosting, repository publication, Join, and final Devpost submission remain external actions.
