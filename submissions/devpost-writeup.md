@@ -1,5 +1,11 @@
 # ReflexEdge
 
+## Judge quick path
+
+- See the complete sensor-to-action story first: https://reflexedge-arm-ai.jiangth99.chatgpt.site
+- Inspect or reproduce every claim: https://github.com/Oxygen56/reflexedge-arm-physical-ai
+- Headline evidence: five alternating-order paired Arm64 trials produced a 3.01× median p95 speedup, with every trial faster and zero added false-negative brake decisions.
+
 ## Inspiration
 
 Physical AI becomes dangerous when optimization is treated as a speed-only exercise. A quantized model can be faster while silently changing the action that matters. ReflexEdge is a compact, auditable collision reflex: a 64-beam range frame enters a learned model and leaves as a deterministic `GO`, `HOLD`, or `BRAKE` command, with performance and safety evaluated together.
@@ -18,6 +24,17 @@ Both paths use the same learned logistic-risk model, decision threshold, test ro
 The project contains a rights-clean synthetic sensor generator, deterministic train/validation/test splits, a dependency-free Python trainer and quantizer, two C++17 inference binaries, an Arm64 hardware capture, repeated benchmark harnesses, safety regression tests, a public evidence dashboard, and a 62.4-second evidence video.
 
 The baseline is compiled with vectorization disabled and uses a reference sensor encoder. The optimized path replaces repeated angular calculations and full sorting with a calibration lookup and one-pass summaries, fuses Arm-vectorized feature quantization, and uses Arm NEON/DotProd intrinsics for the learned dot product. A one-sided safety bias is calibrated on validation data only; it deliberately favors an extra brake over a missed brake. The test set remains frozen until the final comparison.
+
+## What we optimized
+
+| Stage | Frozen baseline | Optimized Arm path |
+| --- | --- | --- |
+| Sensor front end | Recompute analytic angular weights and fully order danger values | Precomputed fixed-beam calibration lookup and one-pass top-danger summary |
+| Numeric path | FP32 features and weights | Fused Arm-vectorized feature quantization and symmetric int8 weights |
+| Inference kernel | Scalar accumulation with compiler vectorization disabled | 16-byte Arm NEON vectors with DotProd when available |
+| Safety handling | Original learned score and shared action policy | Validation-only one-sided bias, frozen before test, favoring an extra brake over a missed brake |
+
+The optimization is therefore not “the same application compiled on Arm.” It replaces measured hot-path work with an Arm-specific fused path while preserving a common input contract, decision threshold, action policy, and frozen evaluation set.
 
 ## Measured result on Arm
 
