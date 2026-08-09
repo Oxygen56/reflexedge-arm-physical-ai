@@ -2,7 +2,7 @@
 
 **A verifiable sensor-to-brake Physical AI reference system optimized for Arm.**
 
-[Interactive evidence demo](https://reflexedge-arm-ai.jiangth99.chatgpt.site) · [57-second evidence video](demo/video/reflexedge-evidence-demo.mp4) · [Measured comparison](reports/comparison.md)
+[Interactive evidence demo](https://reflexedge-arm-ai.jiangth99.chatgpt.site) · [62.4-second evidence video](demo/video/reflexedge-evidence-demo.mp4) · [Measured comparison](reports/comparison.md)
 
 ReflexEdge turns a raw 64-beam distance and radial-velocity frame into a learned collision-risk score and a deterministic `GO`, `HOLD`, or `BRAKE` command. It is designed to make every performance and safety claim reproducible: the repository freezes a scalar FP32 baseline, applies fused sensor-front-end and int8 Arm NEON optimizations, replays the exact same sensor cases through both paths, and retains raw machine-readable evidence.
 
@@ -43,7 +43,7 @@ The command regenerates the licensed synthetic sensor corpus, trains and quantiz
 
 The final gate also checks anonymous access to the public repository, MIT license, evidence video, and interactive demo. Network access is therefore required only for that last publication check; the core train/build/test/benchmark path is fully local.
 
-The judge-facing replay dashboard lives in `demo/site/`. Its public evidence module is generated from the same rights-checked JSON and CSV artifacts by `scripts/build_demo_evidence.py`; displayed numbers are not hand-entered. The pre-rendered evidence video is `demo/video/reflexedge-evidence-demo.mp4` (57 seconds, 1080p, silent, no third-party music).
+The judge-facing replay dashboard lives in `demo/site/`. Its public evidence module is generated from the same rights-checked JSON and CSV artifacts by `scripts/build_demo_evidence.py`; displayed numbers are not hand-entered. The pre-rendered evidence video is `demo/video/reflexedge-evidence-demo.mp4` (62.4 seconds, 1080p, silent, no third-party music).
 
 To build and verify the dashboard:
 

@@ -15,7 +15,7 @@ Both paths use the same learned logistic-risk model, decision threshold, test ro
 
 ## How we built it
 
-The project contains a rights-clean synthetic sensor generator, deterministic train/validation/test splits, a dependency-free Python trainer and quantizer, two C++17 inference binaries, an Arm64 hardware capture, repeated benchmark harnesses, safety regression tests, a public evidence dashboard, and a 57-second evidence video.
+The project contains a rights-clean synthetic sensor generator, deterministic train/validation/test splits, a dependency-free Python trainer and quantizer, two C++17 inference binaries, an Arm64 hardware capture, repeated benchmark harnesses, safety regression tests, a public evidence dashboard, and a 62.4-second evidence video.
 
 The baseline is compiled with vectorization disabled and uses a reference sensor encoder. The optimized path replaces repeated angular calculations and full sorting with a calibration lookup and one-pass summaries, fuses Arm-vectorized feature quantization, and uses Arm NEON/DotProd intrinsics for the learned dot product. A one-sided safety bias is calibrated on validation data only; it deliberately favors an extra brake over a missed brake. The test set remains frozen until the final comparison.
 

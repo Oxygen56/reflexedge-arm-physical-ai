@@ -45,4 +45,4 @@ ReflexEdge is a safety-oriented, judge-replayable Physical AI system: range-sens
 - Five independent, alternating-order paired trials show median raw sensor-to-action speedups of 2.83× p50, 3.01× p95, and 2.76× throughput; every trial improved p95 and throughput.
 - The 1.25M-inference final run shows 1,966.12 ns → 402.34 ns p50 and 5,480.60 ns → 700.50 ns p95 for the raw sensor-to-action path. Model bytes fall 72.60%.
 - Optimized test accuracy is 98.20% versus 98.24% baseline, with zero added false negatives. Final-run peak process RSS increased 2.60%; direct joules were not measured.
-- Tests, data audit, rights gate, public replay site, and a 57-second evidence video are complete locally. Public hosting, repository publication, Join, and final Devpost submission remain external actions.
+- Tests, data audit, rights gate, public repository, public replay site, and a 62.4-second evidence video are complete and anonymously verified. Join, public video-platform upload, and final Devpost submission remain external actions that require click-time confirmation.
