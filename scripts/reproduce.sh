@@ -16,6 +16,7 @@ python3 -m unittest discover -s tests -v
 python3 src/compare_results.py
 python3 scripts/build_demo_evidence.py
 python3 scripts/rights_check.py
+python3 scripts/validate_publication.py
 python3 scripts/validate_buidl.py
 
 echo "ReflexEdge reproduction complete. Read reports/comparison.md."

@@ -39,6 +39,8 @@ Requirements: an Arm64 macOS or Linux machine, Python 3.11+, and a C++17 compile
 
 The command regenerates the licensed synthetic sensor corpus, trains and quantizes the model, builds both engines, runs tests, repeats both benchmarks on the same frames, and writes a comparison report under `reports/`.
 
+The final gate also checks anonymous access to the public repository, MIT license, evidence video, and interactive demo. Network access is therefore required only for that last publication check; the core train/build/test/benchmark path is fully local.
+
 The judge-facing replay dashboard lives in `demo/site/`. Its public evidence module is generated from the same rights-checked JSON and CSV artifacts by `scripts/build_demo_evidence.py`; displayed numbers are not hand-entered. The pre-rendered evidence video is `demo/video/reflexedge-evidence-demo.mp4` (57 seconds, 1080p, silent, no third-party music).
 
 To build and verify the dashboard:

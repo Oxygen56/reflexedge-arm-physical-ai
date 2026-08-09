@@ -23,6 +23,7 @@ REQUIRED_FILES = [
     "artifacts/model.json",
     "data/raw/dataset_metadata.json",
     "reports/data_contract.json",
+    "reports/publication_validation.json",
     "reports/video_validation.json",
     "demo/video/reflexedge-evidence-demo.mp4",
     "scripts/reproduce.sh",
@@ -67,6 +68,11 @@ def main() -> None:
             failures.append("demo video is not verified at 1920x1080")
         if video.get("third_party_music") != "none":
             failures.append("demo video music rights are not cleared")
+    publication_path = Path("reports/publication_validation.json")
+    if publication_path.is_file():
+        publication = json.loads(publication_path.read_text(encoding="utf-8"))
+        if not publication.get("ok"):
+            failures.append("public repository, demo, or video availability gate failed")
     result = {"failures": failures, "ok": not failures, "required_files": REQUIRED_FILES}
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")

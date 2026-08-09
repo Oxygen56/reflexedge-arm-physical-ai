@@ -1,0 +1,27 @@
+{
+  "checked_at": "2026-08-09T18:38:06.736260+00:00",
+  "checks": {
+    "demo": {
+      "content_type": "text/html; charset=utf-8",
+      "reflexedge_marker": true,
+      "status": 200
+    },
+    "license": {
+      "mit_visible": true,
+      "status": 200
+    },
+    "repository": {
+      "default_branch": "main",
+      "private": false,
+      "status": 200,
+      "url": "https://github.com/Oxygen56/reflexedge-arm-physical-ai"
+    },
+    "video": {
+      "content_type": "application/octet-stream",
+      "size_bytes": 2030142,
+      "status": 200
+    }
+  },
+  "failures": [],
+  "ok": true
+}
