@@ -1,12 +1,20 @@
 {
-  "checked_at": "2026-08-09T18:38:06.736260+00:00",
+  "checked_at": "2026-08-09T19:02:36.709395+00:00",
   "checks": {
+    "commit": {
+      "local_head": "5d6f51cd6080a13467a6b1d3c3e5bc793f096c35",
+      "remote_head": "5d6f51cd6080a13467a6b1d3c3e5bc793f096c35",
+      "status": 200
+    },
     "demo": {
       "content_type": "text/html; charset=utf-8",
+      "current_metric_marker": true,
+      "dataset_marker": true,
       "reflexedge_marker": true,
       "status": 200
     },
     "license": {
+      "matches_local": true,
       "mit_visible": true,
       "status": 200
     },
@@ -18,7 +26,9 @@
     },
     "video": {
       "content_type": "application/octet-stream",
-      "size_bytes": 2030142,
+      "matches_local": true,
+      "sha256": "769d7f2c33ee9ff6a82ab48245190321f2df2c794d4ec2b315a752e9ad7b2b5e",
+      "size_bytes": 2310508,
       "status": 200
     }
   },
