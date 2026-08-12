@@ -13,10 +13,10 @@ This is the end-to-end Physical AI path: raw 64-beam distance and velocity input
 
 | Metric | Scalar FP32 | Fused int8 Arm path | Change |
 | --- | ---: | ---: | ---: |
-| p50 latency | 1966.12 ns | 402.34 ns | 4.89x speedup |
-| p95 latency | 5480.60 ns | 700.50 ns | 7.82x speedup |
-| Throughput | 330872/s | 2216602/s | +569.9% |
-| CPU-time proxy | 1976.73 ns/inf | 434.20 ns/inf | 78.0% lower |
+| p50 latency | 2611.97 ns | 1031.25 ns | 2.53x speedup |
+| p95 latency | 10738.54 ns | 4703.12 ns | 2.28x speedup |
+| Throughput | 194955/s | 338816/s | +73.8% |
+| CPU-time proxy | 2537.53 ns/inf | 976.08 ns/inf | 61.5% lower |
 
 ## Model inference kernel
 
@@ -24,18 +24,30 @@ Features are pre-encoded for this microbenchmark; CSV loading and sensor encodin
 
 | Metric | Scalar FP32 | Int8 Arm NEON | Change |
 | --- | ---: | ---: | ---: |
-| p50 latency | 365.88 ns | 7.81 ns | 46.83x speedup |
-| p95 latency | 2278.79 ns | 29.97 ns | 76.04x speedup |
-| Throughput | 735774/s | 46768382/s | +6256.4% |
-| CPU-time energy proxy | 408.14 ns/inf | 12.87 ns/inf | 96.8% lower |
+| p50 latency | 317.69 ns | 13.03 ns | 24.38x speedup |
+| p95 latency | 856.75 ns | 76.84 ns | 11.15x speedup |
+| Throughput | 2081103/s | 15524254/s | +646.0% |
+| CPU-time energy proxy | 372.66 ns/inf | 27.33 ns/inf | 92.7% lower |
 | Model bytes | 584 | 160 | 72.6% lower |
-| Peak RSS | 10092544 | 10354688 | +2.6% |
+| Peak RSS | 9748480 | 10076160 | +3.4% |
 | Accuracy | 0.98240 | 0.98200 | -0.040 pp |
-| False negatives | 6 | 5 | added: 0 |
+| Total ground-truth false negatives | 6 | 5 | newly introduced cases: 0 |
+
+## Action agreement and BRAKE safety
+
+These counts use the same frozen test frames but answer different questions. Full action agreement compares all three commands; the safety gate is directional and asks whether int8 ever drops a scalar BRAKE.
+
+| Metric | Count | Definition |
+| --- | ---: | --- |
+| Full three-state action disagreements | 15 | Scalar and int8 emit different `GO` / `HOLD` / `BRAKE` commands |
+| BRAKE-boundary disagreements | 3 | One engine emits `BRAKE` and the other emits `GO` or `HOLD` |
+| Int8 BRAKE false-negative disagreements vs scalar | 0 | Scalar emits `BRAKE`; int8 emits `GO` or `HOLD` |
+| Additional int8 BRAKE decisions vs scalar | 3 | Int8 emits `BRAKE`; scalar emits `GO` or `HOLD` |
+| Added ground-truth false negatives vs scalar | 0 | True brake label, scalar emits `BRAKE`, and int8 emits `GO` or `HOLD` |
 
 ## Independent process trials
 
-Across 5 alternating-order paired trials, the median raw sensor-to-action speedups were 2.83x p50, 3.01x p95, and 2.76x throughput.
+Across 5 alternating-order paired trials, the median raw sensor-to-action speedups were 2.39x p50, 6.06x p95, and 3.03x throughput.
 
 ## Claim boundaries
 
@@ -49,6 +61,9 @@ Across 5 alternating-order paired trials, the median raw sensor-to-action speedu
 
 - [x] real_arm64_hardware
 - [x] same_dataset_and_rows
+- [x] cross_engine_action_metrics_match
+- [x] action_metrics_are_consistent
+- [x] zero_int8_brake_false_negative_disagreements
 - [x] zero_added_safety_false_negatives
 - [x] accuracy_loss_within_half_point
 - [x] optimized_p95_is_faster

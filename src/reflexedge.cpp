@@ -326,10 +326,24 @@ float infer_optimized(const Sample& sample) {
   return infer_optimized_features(sample.quantized);
 }
 
-const char* action(float probability) {
-  if (probability >= reflexedge_model::kThreshold) return "BRAKE";
-  if (probability >= reflexedge_model::kThreshold * 0.62f) return "HOLD";
-  return "GO";
+enum class Action : std::uint8_t { Go = 0, Hold = 1, Brake = 2 };
+
+Action classify_action(float probability) {
+  if (probability >= reflexedge_model::kThreshold) return Action::Brake;
+  if (probability >= reflexedge_model::kThreshold * 0.62f) return Action::Hold;
+  return Action::Go;
+}
+
+const char* action_name(Action value) {
+  switch (value) {
+    case Action::Brake:
+      return "BRAKE";
+    case Action::Hold:
+      return "HOLD";
+    case Action::Go:
+      return "GO";
+  }
+  return "UNKNOWN";
 }
 
 double percentile(std::vector<double> values, double fraction) {
@@ -392,9 +406,7 @@ float infer_pipeline_selected(const Sample& sample) {
   encode_sensor_frame(sample.distances, sample.velocities, features);
   const float probability = infer_scalar_features(features);
 #endif
-  const float action_token = probability >= reflexedge_model::kThreshold
-                                 ? 2.0f
-                                 : probability >= reflexedge_model::kThreshold * 0.62f ? 1.0f : 0.0f;
+  const float action_token = static_cast<float>(classify_action(probability));
   return probability + action_token;
 }
 
@@ -455,7 +467,10 @@ void write_result(const std::string& path, const std::string& dataset_path,
   const Measurement pipeline = measure(samples, repeats, infer_pipeline_selected);
 
   Confusion confusion;
-  std::uint64_t action_disagreements = 0;
+  std::uint64_t three_state_action_disagreements = 0;
+  std::uint64_t brake_decision_disagreements = 0;
+  std::uint64_t int8_brake_false_negative_disagreements = 0;
+  std::uint64_t int8_additional_brake_decisions = 0;
   std::uint64_t added_false_negatives = 0;
   for (const auto& sample : samples) {
     const float probability = infer_selected(sample);
@@ -464,10 +479,15 @@ void write_result(const std::string& path, const std::string& dataset_path,
     confusion.fp += prediction && sample.label == 0;
     confusion.tn += !prediction && sample.label == 0;
     confusion.fn += !prediction && sample.label == 1;
-    const bool scalar_action = infer_scalar(sample) >= reflexedge_model::kThreshold;
-    const bool optimized_action = infer_optimized(sample) >= reflexedge_model::kThreshold;
-    action_disagreements += scalar_action != optimized_action;
-    added_false_negatives += scalar_action && !optimized_action && sample.label == 1;
+    const Action scalar_action = classify_action(infer_scalar(sample));
+    const Action optimized_action = classify_action(infer_optimized(sample));
+    const bool scalar_brake = scalar_action == Action::Brake;
+    const bool optimized_brake = optimized_action == Action::Brake;
+    three_state_action_disagreements += scalar_action != optimized_action;
+    brake_decision_disagreements += scalar_brake != optimized_brake;
+    int8_brake_false_negative_disagreements += scalar_brake && !optimized_brake;
+    int8_additional_brake_decisions += !scalar_brake && optimized_brake;
+    added_false_negatives += scalar_brake && !optimized_brake && sample.label == 1;
   }
   const double accuracy = static_cast<double>(confusion.tp + confusion.tn) / samples.size();
   const double precision = static_cast<double>(confusion.tp) / std::max<std::uint64_t>(1, confusion.tp + confusion.fp);
@@ -517,7 +537,12 @@ void write_result(const std::string& path, const std::string& dataset_path,
        << "  \"quality\": {\"accuracy\": " << accuracy << ", \"precision\": " << precision
        << ", \"recall\": " << recall << ", \"f1\": " << f1
        << ", \"false_negative\": " << confusion.fn << "},\n"
-       << "  \"scalar_vs_int8_action_disagreements\": " << action_disagreements << ",\n"
+       << "  \"action_disagreement_scope\": \"full three-state GO/HOLD/BRAKE command equality\",\n"
+       << "  \"scalar_vs_int8_action_disagreements\": " << three_state_action_disagreements << ",\n"
+       << "  \"scalar_vs_int8_brake_decision_disagreements\": " << brake_decision_disagreements << ",\n"
+       << "  \"int8_brake_false_negative_disagreements_vs_scalar\": "
+       << int8_brake_false_negative_disagreements << ",\n"
+       << "  \"int8_additional_brake_decisions_vs_scalar\": " << int8_additional_brake_decisions << ",\n"
        << "  \"additional_false_negatives_vs_scalar\": " << added_false_negatives << ",\n"
        << "  \"direct_energy_joules\": null,\n"
        << "  \"direct_energy_status\": \"not_measured_requires_supported_meter\",\n"
@@ -535,7 +560,8 @@ void demo(const std::vector<Sample>& samples, std::size_t count) {
     const float probability = infer_selected(samples[index]);
     std::cout << "{\"sample\":\"" << json_escape(samples[index].id) << "\",\"scenario\":\""
               << json_escape(samples[index].scenario) << "\",\"risk\":" << std::fixed
-              << std::setprecision(5) << probability << ",\"action\":\"" << action(probability)
+              << std::setprecision(5) << probability << ",\"action\":\""
+              << action_name(classify_action(probability))
               << "\",\"truth_brake\":" << samples[index].label << "}\n";
   }
 }

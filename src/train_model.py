@@ -111,6 +111,44 @@ def metrics(probabilities: list[float], labels: list[int], threshold: float) -> 
     }
 
 
+def action(probability: float, threshold: float) -> str:
+    if probability >= threshold:
+        return "BRAKE"
+    if probability >= threshold * 0.62:
+        return "HOLD"
+    return "GO"
+
+
+def compare_actions(
+    float_probabilities: list[float],
+    int8_probabilities: list[float],
+    labels: list[int],
+    threshold: float,
+) -> dict[str, int]:
+    float_actions = [action(probability, threshold) for probability in float_probabilities]
+    int8_actions = [action(probability, threshold) for probability in int8_probabilities]
+    float_brakes = [value == "BRAKE" for value in float_actions]
+    int8_brakes = [value == "BRAKE" for value in int8_actions]
+    return {
+        "float_vs_int8_action_disagreements": sum(
+            left != right for left, right in zip(float_actions, int8_actions)
+        ),
+        "float_vs_int8_brake_decision_disagreements": sum(
+            left != right for left, right in zip(float_brakes, int8_brakes)
+        ),
+        "int8_brake_false_negative_disagreements_vs_float": sum(
+            left and not right for left, right in zip(float_brakes, int8_brakes)
+        ),
+        "int8_additional_brake_decisions_vs_float": sum(
+            not left and right for left, right in zip(float_brakes, int8_brakes)
+        ),
+        "additional_false_negatives_vs_float": sum(
+            label == 1 and left and not right
+            for label, left, right in zip(labels, float_brakes, int8_brakes)
+        ),
+    }
+
+
 def choose_threshold(probabilities: list[float], labels: list[int]) -> tuple[float, dict[str, float | int]]:
     best_threshold = 0.5
     best_metrics = metrics(probabilities, labels, best_threshold)
@@ -188,9 +226,8 @@ def main() -> None:
         predict_int8(row, qweights, weight_scale, bias, safety_bias) for row in validation_x
     ]
     int8_metrics = metrics(int8_probabilities, validation_y, threshold)
-    action_disagreements = sum(
-        (left >= threshold) != (right >= threshold)
-        for left, right in zip(float_probabilities, int8_probabilities)
+    action_comparison = compare_actions(
+        float_probabilities, int8_probabilities, validation_y, threshold
     )
     model = {
         "type": "logistic_collision_risk",
@@ -207,7 +244,8 @@ def main() -> None:
         "validation": {
             "float": float_metrics,
             "int8": int8_metrics,
-            "action_disagreements": action_disagreements,
+            "action_disagreement_scope": "full three-state GO/HOLD/BRAKE command equality",
+            **action_comparison,
             "accuracy_delta": float(int8_metrics["accuracy"]) - float(float_metrics["accuracy"]),
         },
     }

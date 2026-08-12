@@ -79,7 +79,9 @@ def main() -> None:
             failures.append(f"{split} identifiers overlap another split")
         all_ids.update(ids)
     result = {"audits": audits, "failures": failures, "ok": not failures}
-    Path("reports/data_contract.json").write_text(
+    output = Path("reports/data_contract.json")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(
         json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
     print(json.dumps(result, indent=2, sort_keys=True))

@@ -1,12 +1,19 @@
 {
-  "checked_at": "2026-08-12T03:08:05.558449+00:00",
+  "checked_at": "2026-08-12T11:19:06.438997+00:00",
   "checks": {
     "commit": {
-      "local_head": "fe21e78171ec06a5f2050b7c873356ff7bcd26c8",
-      "remote_head": "fe21e78171ec06a5f2050b7c873356ff7bcd26c8",
+      "local_head": "b15f39b94ef61ad7e8196d9ebd2befc5a7858339",
+      "remote_head": "b15f39b94ef61ad7e8196d9ebd2befc5a7858339",
       "status": 200
     },
     "demo": {
+      "action_markers": {
+        "added_ground_truth_fn": false,
+        "additional_int8_brake": false,
+        "brake_boundary": false,
+        "missed_scalar_brake": false,
+        "three_state": false
+      },
       "content_type": "text/html; charset=utf-8",
       "current_metric_marker": true,
       "dataset_marker": true,
@@ -26,12 +33,25 @@
     },
     "video": {
       "content_type": "application/octet-stream",
-      "matches_local": true,
+      "matches_local": false,
       "sha256": "769d7f2c33ee9ff6a82ab48245190321f2df2c794d4ec2b315a752e9ad7b2b5e",
       "size_bytes": 2310508,
       "status": 200
     }
   },
-  "failures": [],
-  "ok": true
+  "evidence_snapshot": {
+    "action_metrics": {
+      "additional_false_negatives_vs_scalar": 0,
+      "int8_additional_brake_decisions_vs_scalar": 3,
+      "int8_brake_false_negative_disagreements_vs_scalar": 0,
+      "scalar_vs_int8_action_disagreements": 15,
+      "scalar_vs_int8_brake_decision_disagreements": 3
+    },
+    "video_sha256": "087e95a70377ec28e93925dc88fdc2e14b7df9935ace56dbdc5d62633b1cad1f"
+  },
+  "failures": [
+    "public evidence video is missing or unexpectedly small",
+    "public evidence demo is unavailable or does not match local metrics"
+  ],
+  "ok": false
 }

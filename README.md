@@ -41,6 +41,8 @@ Requirements: an Arm64 macOS or Linux machine, Python 3.11+, and a C++17 compile
 
 The command regenerates the licensed synthetic sensor corpus, trains and quantizes the model, builds both engines, runs tests, runs a final benchmark plus five alternating-order independent paired trials on the same frames, and writes comparison reports under `reports/`.
 
+The judge-facing script is self-contained within this repository and does not require Codex, `contestctl`, or a locally installed competition skill. The `.competition/bin/contestctl` wrapper remains optional maintainer tooling; `make audit` and `make reproduce` use only repository-owned scripts.
+
 The final gate also checks anonymous access to the public repository, MIT license, evidence video, and interactive demo. Network access is therefore required only for that last publication check; the core train/build/test/benchmark path is fully local.
 
 The judge-facing replay dashboard lives in `demo/site/`. Its public evidence module is generated from the same rights-checked JSON and CSV artifacts by `scripts/build_demo_evidence.py`; displayed numbers are not hand-entered. The pre-rendered evidence video is `demo/video/reflexedge-evidence-demo.mp4` (62.4 seconds, 1080p, silent, no third-party music).
@@ -65,7 +67,8 @@ To replay visible sensor-to-action events:
 - The primary latency claim covers in-memory raw distance/velocity input through feature encoding, quantization when applicable, inference, and action-policy evaluation. Physical sensor I/O and actuator transport are not timed.
 - Raw JSON is retained; the Markdown summary is derived from it.
 - Direct energy is reported only when a supported meter is available. CPU time per inference is labeled as an energy proxy, never as joules.
-- Quantization must not introduce a safety-critical false negative in the frozen test corpus.
+- Full action agreement compares the exact three-state `GO` / `HOLD` / `BRAKE` command. The separate directional safety gate counts int8 cases that drop a scalar `BRAKE`, then reports the ground-truth-positive subset as added false negatives.
+- Quantization must not introduce a safety-critical BRAKE false-negative disagreement or added ground-truth false negative in the frozen test corpus.
 - CPU-time per inference is an explicitly labeled proxy; no direct energy-in-joules result is claimed.
 - The measured peak process RSS increased; the size claim applies only to model bytes.
 

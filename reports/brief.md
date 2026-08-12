@@ -35,14 +35,14 @@ ReflexEdge is a safety-oriented, judge-replayable Physical AI system: range-sens
 - Split: seed-derived, fixed train/test files; test rows are never used for gradient updates.
 - Baseline: scalar FP32 logistic risk model, vectorization disabled at compile time.
 - Optimization: symmetric int8 weights/features plus Arm NEON dot-product kernel.
-- Safety gate: no new false-negative brake decisions on the frozen test corpus; accuracy loss <= 0.5 percentage points.
+- Safety gate: zero int8 BRAKE false-negative disagreements versus scalar and zero added ground-truth false negatives on the frozen test corpus; accuracy loss <= 0.5 percentage points.
 - Performance gate: repeated warm benchmark, p50/p95 latency and throughput derived from raw JSON.
 
 ## Current state
 
-- Official deadline and live Join availability were reconfirmed on 2026-08-10; joining awaits the required click-time confirmation.
+- The official deadline is 2026-08-15 07:00 Beijing, and Devpost Join is verified for account `Oxygen56`.
 - The full sensor-to-action pipeline runs on a real Apple M4 Arm64 host with NEON and DotProd available.
-- Five independent, alternating-order paired trials show median raw sensor-to-action speedups of 2.83× p50, 3.01× p95, and 2.76× throughput; every trial improved p95 and throughput.
-- The 1.25M-inference final run shows 1,966.12 ns → 402.34 ns p50 and 5,480.60 ns → 700.50 ns p95 for the raw sensor-to-action path. Model bytes fall 72.60%.
-- Optimized test accuracy is 98.20% versus 98.24% baseline, with zero added false negatives. Final-run peak process RSS increased 2.60%; direct joules were not measured.
-- Tests, data audit, rights gate, public repository, public replay site, and a 62.4-second evidence video are complete and anonymously verified. Join, public video-platform upload, and final Devpost submission remain external actions that require click-time confirmation.
+- Five independent, alternating-order paired trials show median raw sensor-to-action speedups of 2.39× p50, 6.06× p95, and 3.03× throughput; every trial improved p95 and throughput.
+- The 1.25M-inference final run shows 2,611.97 ns → 1,031.25 ns p50 and 10,738.54 ns → 4,703.12 ns p95 for the raw sensor-to-action path. Model bytes fall 72.60%.
+- Optimized test accuracy is 98.20% versus 98.24% baseline. Across 2,500 frozen test frames, 15 exact `GO` / `HOLD` / `BRAKE` commands differ; three cross the BRAKE boundary and all three are additional int8 BRAKE decisions. Int8 drops zero scalar BRAKE decisions and adds zero ground-truth false negatives. Final-run peak process RSS increased 3.36%; direct joules were not measured.
+- Tests, data audit, rights gate, public repository, and a corrected 62.4-second evidence video are complete. Devpost Join is verified. The corrected repository/video and replay site still require publication revalidation; Arm Developer Program membership, the final public video-platform URL, and final Devpost submission remain hard external gates.

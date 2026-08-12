@@ -6,15 +6,15 @@
 - Official displayed deadline: 2026-08-15 07:00 GMT+8.
 - Public MIT repository: https://github.com/Oxygen56/reflexedge-arm-physical-ai
 - Public judge demo: https://reflexedge-arm-ai.jiangth99.chatgpt.site
-- Rights-clean 62.4-second 1080p H.264 evidence video is ready at `demo/video/reflexedge-evidence-demo.mp4`.
-- Repository, license, demo, and video are anonymously reachable and validated.
-- Rights gate and judge-package gate pass with no failures.
+- A corrected rights-clean 62.4-second 1080p H.264 evidence video and cover are ready locally; both display the explicit action/safety counts `15 / 3 / 0 / 3 / 0`.
+- Rights gate passes with no failures.
+- The package gate now fails closed only because the public demo and repository-hosted video still expose the prior evidence version; the corrected local artifacts must be published and revalidated before final submission.
 - Devpost write-up, field map, cover image, video metadata, reproducibility instructions, Arm64 hardware evidence, paired-trial logs, and claim boundaries are ready.
 
 ## Remaining external actions
 
-1. Enable local-file access for the ChatGPT Chrome extension.
-2. Upload the Devpost cover image and the evidence video to the logged-in YouTube channel `Oxygen 998`; verify anonymous playback and duration.
+1. Publish the corrected repository evidence and redeploy the judge demo; revalidate that the public video and page match `15 / 3 / 0 / 3 / 0`.
+2. Upload the corrected cover image and evidence video to the logged-in YouTube channel `Oxygen 998`; verify anonymous playback and duration. The prior public upload `CD2CzFdcR9I` contains superseded performance figures and must not be used for submission.
 3. Add the verified YouTube URL to the Devpost draft.
 4. Re-run rights, publication, and package gates against final URLs.
 5. Review the complete live submission with the user and obtain final-submit confirmation.
@@ -31,5 +31,6 @@
 - Additional info asks only project-building and future-use survey questions.
 - Finalization asks for the Official Rules and Devpost Terms agreement.
 - No AI, Codex, generative-AI, or automated-assistance disclosure field appeared in any live step.
+- Official rules also require Arm Developer Program registration, verified email, completed profile, `Join`, and dashboard access using the intended email; this has not yet been verified in the live account.
 
 No draft, upload, AI disclosure response, or final submission should be reported as completed without its authoritative page-level confirmation.

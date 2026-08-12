@@ -2,7 +2,7 @@
 
 ## Claim under test
 
-On the same Arm64 host and the same frozen sensor frames, an int8 Arm NEON inference kernel can reduce collision-risk inference latency and model memory relative to a scalar FP32 kernel without introducing a safety-critical false-negative brake decision.
+On the same Arm64 host and the same frozen sensor frames, an int8 Arm NEON inference kernel can reduce collision-risk inference latency and model memory relative to a scalar FP32 kernel with zero int8 BRAKE false-negative disagreements and zero added ground-truth false negatives.
 
 ## Frozen components
 
@@ -38,7 +38,8 @@ On the same Arm64 host and the same frozen sensor frames, an int8 Arm NEON infer
 - Throughput in inferences per second.
 - CPU time per inference as an energy proxy.
 - Peak resident memory and model byte count.
-- Accuracy, precision, recall, F1, false negatives, and baseline/optimized action agreement.
+- Accuracy, precision, recall, F1, and total false negatives.
+- Full three-state action disagreements compare exact `GO` / `HOLD` / `BRAKE` commands. BRAKE-boundary disagreements are reported separately by direction: an int8 BRAKE false-negative disagreement means scalar says `BRAKE` while int8 says `GO` or `HOLD`; an added ground-truth false negative is the label-positive subset.
 
 Direct energy in joules is outside the initial claim. It may be added only from a supported local meter with raw logs; estimated CPU time is never relabeled as joules.
 
@@ -46,7 +47,7 @@ Direct energy in joules is outside the initial claim. It may be added only from 
 
 1. Evidence host reports `arm64` or `aarch64`.
 2. Test checksum is identical for both engines.
-3. Optimized engine has zero additional false-negative `BRAKE` decisions versus baseline.
+3. Optimized engine has zero BRAKE false-negative disagreements and zero added ground-truth false negatives versus baseline.
 4. Accuracy loss is no more than 0.5 percentage points.
 5. Performance and memory claims are generated from raw JSON, not manually typed.
 6. A negative control proves the validator rejects a corrupted or non-Arm evidence bundle.

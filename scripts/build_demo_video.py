@@ -4,12 +4,21 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import html
 import json
 import math
 import shutil
 import subprocess
 from pathlib import Path
+
+try:
+    from scripts.performance_snapshot import (
+        build_performance_snapshot,
+        source_alignment_failures,
+    )
+except ModuleNotFoundError:  # direct execution via python3 scripts/build_demo_video.py
+    from performance_snapshot import build_performance_snapshot, source_alignment_failures
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -79,11 +88,21 @@ def header(step: str) -> str:
 
 def social_scene(comparison: dict) -> str:
     trial_p95 = comparison["independent_trials"]["pipeline_p95_speedup"]["median"]
+    missed_brakes = comparison["int8_brake_false_negative_disagreements_vs_scalar"]
+    added_false_negatives = comparison["additional_false_negatives_vs_scalar"]
     body = header("ARM64 / PHYSICAL AI")
     body += text(74, 275, "A BRAKE REFLEX", 112, "#f4f6f8", 700)
     body += text(74, 400, "YOU CAN AUDIT.", 112, LIME, 700)
     body += '<rect x="74" y="510" width="1050" height="100" fill="#0d1117" stroke="' + LIME + '"/>'
-    body += text(112, 575, f"{trial_p95:.2f}× MEDIAN P95 · 0 ADDED FALSE NEGATIVES", 30, LIME, 700, "Menlo,monospace")
+    body += text(
+        112,
+        575,
+        f"{trial_p95:.2f}× P95 · {missed_brakes} MISSED SCALAR BRAKES · {added_false_negatives} ADDED GT FNs",
+        25,
+        LIME,
+        700,
+        "Menlo,monospace",
+    )
     body += text(74, 700, "RAW 64-BEAM SENSOR → FUSED INT8 NEON → BRAKE", 26, VIOLET, 650, "Menlo,monospace", spacing=1)
     center_x, center_y, radius = 1510, 890, 480
     for index in range(33):
@@ -165,7 +184,7 @@ def radar_scene(row: dict[str, str], model: dict, number: int) -> str:
     return svg_document(body)
 
 
-def metric_scene(comparison: dict, baseline: dict, optimized: dict) -> str:
+def metric_scene(comparison: dict, baseline: dict, optimized: dict, trials: dict) -> str:
     body = header("02 / OPTIMIZATION DELTA")
     body += text(74, 200, "THE SAME RAW FRAMES.", 72, "#f4f6f8", 620)
     body += text(74, 286, "A FUSED ARM PIPELINE.", 72, LIME, 620)
@@ -184,9 +203,17 @@ def metric_scene(comparison: dict, baseline: dict, optimized: dict) -> str:
         body += text(x + 28, 650, after, 55, "#f4f6f8", 650, "Menlo,monospace")
         body += text(x + 28, 746, delta, 27, LIME, 700, "Menlo,monospace")
     median_p95 = comparison["independent_trials"]["pipeline_p95_speedup"]["median"]
-    body += text(74, 900, f"5 PAIRED PROCESS TRIALS · MEDIAN RAW-TO-ACTION P95 {median_p95:.2f}×", 20, VIOLET, 600, "Menlo,monospace", spacing=2)
-    body += text(74, 948, "Final run: 1.25M frames per engine. Physical sensor I/O and actuator transport excluded.", 18, MUTED, 500)
-    body += text(74, 985, "Peak process RSS increased 2.6%; only model-byte reduction is claimed.", 18, MUTED, 500)
+    body += text(74, 900, f"{trials['trials']} PAIRED PROCESS TRIALS · MEDIAN RAW-TO-ACTION P95 {median_p95:.2f}×", 20, VIOLET, 600, "Menlo,monospace", spacing=2)
+    inferences = baseline["end_to_end"]["inferences"]
+    body += text(74, 948, f"Final run: {inferences / 1_000_000:.2f}M frames per engine. Physical sensor I/O and actuator transport excluded.", 18, MUTED, 500)
+    body += text(
+        74,
+        985,
+        f"Peak process RSS changed {comparison['peak_rss_change_percent']:+.1f}%; only model-byte reduction is claimed.",
+        18,
+        MUTED,
+        500,
+    )
     return svg_document(body)
 
 
@@ -195,9 +222,32 @@ def safety_scene(comparison: dict) -> str:
     body += text(74, 214, "FASTER IS NOT ENOUGH.", 80, "#f4f6f8", 620)
     body += text(74, 305, "THE BRAKE DECISION MUST SURVIVE.", 80, LIME, 620)
     body += '<rect x="74" y="410" width="840" height="410" fill="#0d1117" stroke="#27313c"/>'
-    body += text(120, 470, "ADDED FALSE-NEGATIVE BRAKES", 20, MUTED, 600, "Menlo,monospace", spacing=2)
-    body += text(120, 700, str(comparison["additional_false_negatives"]), 250, LIME, 700, "Menlo,monospace")
-    body += text(120, 770, "PASS · QUANTIZATION SAFETY GATE", 21, LIME, 650, "Menlo,monospace")
+    body += text(
+        120,
+        462,
+        "ACTION / BRAKE SAFETY COUNTS",
+        18,
+        MUTED,
+        600,
+        "Menlo,monospace",
+        spacing=2,
+    )
+    safety_counts = [
+        ("FULL GO/HOLD/BRAKE DISAGREEMENTS", "scalar_vs_int8_action_disagreements"),
+        ("BRAKE-BOUNDARY DISAGREEMENTS", "scalar_vs_int8_brake_decision_disagreements"),
+        ("MISSED SCALAR BRAKES", "int8_brake_false_negative_disagreements_vs_scalar"),
+        ("ADDITIONAL INT8 BRAKES", "int8_additional_brake_decisions_vs_scalar"),
+        ("ADDED GROUND-TRUTH FALSE NEGATIVES", "additional_false_negatives_vs_scalar"),
+    ]
+    for index, (label, key) in enumerate(safety_counts):
+        y = 530 + index * 55
+        body += text(120, y, label, 15, MUTED, 600, "Menlo,monospace", spacing=1)
+        color = LIME if key in {
+            "int8_brake_false_negative_disagreements_vs_scalar",
+            "additional_false_negatives_vs_scalar",
+        } else "#f4f6f8"
+        body += text(865, y, str(comparison[key]), 32, color, 700, "Menlo,monospace", anchor="end")
+    body += text(120, 790, "PASS · QUANTIZATION SAFETY GATE", 18, LIME, 650, "Menlo,monospace")
     body += '<rect x="954" y="410" width="892" height="410" fill="#0d1117" stroke="#27313c"/>'
     body += text(1000, 470, "ACCURACY", 20, MUTED, 600, "Menlo,monospace", spacing=2)
     body += text(1000, 625, f"{comparison['baseline_quality']['accuracy']*100:.2f}%", 72, "#56616d", 600, "Menlo,monospace")
@@ -252,7 +302,13 @@ def main() -> None:
     comparison = json.loads((ROOT / "reports/comparison.json").read_text(encoding="utf-8"))
     baseline = json.loads((ROOT / "reports/baseline.json").read_text(encoding="utf-8"))
     optimized = json.loads((ROOT / "reports/optimized.json").read_text(encoding="utf-8"))
+    trials = json.loads((ROOT / "reports/trials.json").read_text(encoding="utf-8"))
     hardware = json.loads((ROOT / "reports/hardware.json").read_text(encoding="utf-8"))
+    if not comparison.get("ready_for_claim"):
+        raise SystemExit("comparison evidence has not passed all claim gates")
+    alignment_failures = source_alignment_failures(comparison, baseline, optimized, trials)
+    if alignment_failures:
+        raise SystemExit("video performance sources disagree: " + "; ".join(alignment_failures))
     with (ROOT / "data/raw/test.csv").open(newline="", encoding="utf-8") as handle:
         rows = list(csv.DictReader(handle))
 
@@ -279,7 +335,7 @@ def main() -> None:
         selected = min(candidates, key=lambda row: abs(risk(row, model) - target))
         scenes.append((render_svg(f"01-replay-{number:02d}", radar_scene(selected, model, number)), 2.2))
 
-    scenes.append((render_svg("02-metrics", metric_scene(comparison, baseline, optimized)), 8.0))
+    scenes.append((render_svg("02-metrics", metric_scene(comparison, baseline, optimized, trials)), 8.0))
     scenes.append((render_svg("03-safety", safety_scene(comparison)), 8.0))
     scenes.append((render_svg("04-reproduce", reproduce_scene(comparison, hardware)), 8.0))
     scenes.append((render_svg("05-boundary", boundary_scene()), 8.0))
@@ -314,6 +370,23 @@ def main() -> None:
         "source": "Generated only from rights-checked project evidence and entrant-created graphics.",
         "audio": "none",
         "third_party_music": "none",
+        "sha256": hashlib.sha256(destination.read_bytes()).hexdigest(),
+        "thumbnail_sha256": hashlib.sha256(
+            (ROOT / "demo/site/public/og.png").read_bytes()
+        ).hexdigest(),
+        "action_metrics": {
+            key: comparison[key]
+            for key in (
+                "scalar_vs_int8_action_disagreements",
+                "scalar_vs_int8_brake_decision_disagreements",
+                "int8_brake_false_negative_disagreements_vs_scalar",
+                "int8_additional_brake_decisions_vs_scalar",
+                "additional_false_negatives_vs_scalar",
+            )
+        },
+        "performance_snapshot": build_performance_snapshot(
+            comparison, baseline, optimized, trials
+        ),
     }
     (ROOT / "reports/video_validation.json").write_text(
         json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8"

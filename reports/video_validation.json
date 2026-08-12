@@ -1,7 +1,41 @@
 {
+  "action_metrics": {
+    "additional_false_negatives_vs_scalar": 0,
+    "int8_additional_brake_decisions_vs_scalar": 3,
+    "int8_brake_false_negative_disagreements_vs_scalar": 0,
+    "scalar_vs_int8_action_disagreements": 15,
+    "scalar_vs_int8_brake_decision_disagreements": 3
+  },
   "audio": "none",
   "duration_seconds": 62.416667,
-  "size_bytes": 2310508,
+  "performance_snapshot": {
+    "final_run": {
+      "accuracy_delta_percentage_points": -0.0400000000000067,
+      "baseline_accuracy": 0.9824,
+      "baseline_cpu_proxy_ns_per_inference": 2537.5336,
+      "baseline_model_bytes": 584,
+      "baseline_pipeline_p95_ns": 10738.5421875,
+      "baseline_throughput_per_second": 194954.654152583,
+      "inferences_per_engine": 1250000,
+      "model_size_reduction_percent": 72.6027397260274,
+      "optimized_accuracy": 0.982,
+      "optimized_cpu_proxy_ns_per_inference": 976.0784,
+      "optimized_model_bytes": 160,
+      "optimized_pipeline_p95_ns": 4703.125,
+      "optimized_throughput_per_second": 338815.679760709,
+      "peak_rss_change_percent": 3.361344537815126,
+      "pipeline_cpu_time_proxy_reduction_percent": 61.534365495692356,
+      "pipeline_p95_speedup": 2.2832780730897007,
+      "pipeline_throughput_gain_percent": 73.79204473648106
+    },
+    "headline": {
+      "paired_trial_count": 5,
+      "pipeline_p95_speedup_median": 6.056649218760084
+    },
+    "schema": "reflexedge.video-performance.v1"
+  },
+  "sha256": "087e95a70377ec28e93925dc88fdc2e14b7df9935ace56dbdc5d62633b1cad1f",
+  "size_bytes": 2315711,
   "source": "Generated only from rights-checked project evidence and entrant-created graphics.",
   "streams": [
     {
@@ -12,5 +46,6 @@
     }
   ],
   "third_party_music": "none",
+  "thumbnail_sha256": "463dcfa3f7846117fed4a1a76d7fa569f07c86d258fc7c11f84d2a5250716f4b",
   "video": "demo/video/reflexedge-evidence-demo.mp4"
 }

@@ -10,11 +10,12 @@ ReflexEdge turns deterministic 64-beam range-sensor frames into a learned collis
 
 Measured on Apple M4 Arm64 over the same frozen 2,500-row test set. Five alternating-order paired trials, 500,000 raw sensor frames per engine per trial:
 
-- 3.01× median p95 speedup for raw sensor → action
-- 2.83× median p50 speedup
-- 2.76× median throughput speedup
+- 6.06× median p95 speedup for raw sensor → action
+- 2.39× median p50 speedup
+- 3.03× median throughput speedup
 - 72.60% fewer model bytes
-- zero added false negatives
+- 15 full GO/HOLD/BRAKE disagreements; 3 BRAKE-boundary disagreements, all additional int8 BRAKE decisions
+- zero int8 BRAKE false-negative disagreements and zero added ground-truth false negatives
 
 CPU time per inference is labeled only as an energy proxy; no direct joules are claimed. Peak process RSS increased, so the memory reduction claim applies only to model bytes.
 

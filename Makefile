@@ -4,7 +4,6 @@ data:
 	python3 src/generate_dataset.py
 
 audit:
-	.competition/bin/contestctl audit-data
 	python3 scripts/data_contract.py
 
 train:

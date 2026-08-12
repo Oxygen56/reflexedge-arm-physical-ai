@@ -233,9 +233,14 @@ export function ReflexDemo() {
           after={`${(evidence.benchmark.optimized.accuracy * 100).toFixed(2)}%`}
         />
         <div className={styles.safetyMetric}>
-          <span>ADDED FALSE NEGATIVES</span>
-          <strong>{evidence.benchmark.additionalFalseNegatives}</strong>
-          <p>quantization safety gate</p>
+          <span>ADDED GROUND-TRUTH FALSE NEGATIVES</span>
+          <strong>{evidence.benchmark.additionalFalseNegativesVsScalar}</strong>
+          <p>
+            {evidence.benchmark.threeStateActionDisagreements} full action changes ·{" "}
+            {evidence.benchmark.brakeDecisionDisagreements} BRAKE-boundary ·{" "}
+            {evidence.benchmark.int8BrakeFalseNegativeDisagreementsVsScalar} missed scalar BRAKE ·{" "}
+            {evidence.benchmark.int8AdditionalBrakeDecisionsVsScalar} additional int8 BRAKE
+          </p>
         </div>
       </section>
 

@@ -4,7 +4,7 @@
 
 - See the complete sensor-to-action story first: https://reflexedge-arm-ai.jiangth99.chatgpt.site
 - Inspect or reproduce every claim: https://github.com/Oxygen56/reflexedge-arm-physical-ai
-- Headline evidence: five alternating-order paired Arm64 trials produced a 3.01× median p95 speedup, with every trial faster and zero added false-negative brake decisions.
+- Headline evidence: five alternating-order paired Arm64 trials produced a 6.06× median p95 speedup, with every trial faster, zero int8 BRAKE false-negative disagreements, and zero added ground-truth false negatives.
 
 ## Inspiration
 
@@ -17,7 +17,7 @@ ReflexEdge replays deterministic range and closing-speed sensor frames through t
 1. a frozen scalar FP32 reference implementation; and
 2. an int8 implementation with an Arm NEON dot-product kernel.
 
-Both paths use the same learned logistic-risk model, decision threshold, test rows, and action policy. The optimized result is accepted only if it improves measured performance without adding a safety-critical false-negative brake decision.
+Both paths use the same learned logistic-risk model, decision threshold, test rows, and action policy. The optimized result is accepted only if it improves measured performance with zero int8 BRAKE false-negative disagreements versus scalar and zero added ground-truth false negatives.
 
 ## How we built it
 
@@ -42,12 +42,12 @@ The primary result comes from five independent processes per engine, with execut
 
 | Raw sensor → action metric | Median speedup | Worst trial | Best trial |
 | --- | ---: | ---: | ---: |
-| p50 latency | 2.83× | 2.58× | 3.88× |
-| p95 latency | 3.01× | 2.37× | 4.04× |
-| throughput | 2.76× | 2.58× | 3.77× |
-| CPU-time proxy | 2.80× | 2.56× | 3.78× |
+| p50 latency | 2.39× | 2.26× | 2.70× |
+| p95 latency | 6.06× | 2.35× | 13.57× |
+| throughput | 3.03× | 2.11× | 7.41× |
+| CPU-time proxy | 2.44× | 2.28× | 2.69× |
 
-The separate 1.25M-frame final run measured 1,966.12 ns → 402.34 ns p50 and 5,480.60 ns → 700.50 ns p95 for the complete in-memory raw sensor-to-action path. Model bytes fell from 584 to 160 (−72.60%). Test accuracy is 98.24% → 98.20%, false negatives are 6 → 5, and there are zero added false negatives. CPU time per inference is labeled only as an energy proxy; we did not measure or claim direct joules. Peak process RSS increased by 2.60%, so the memory reduction claim applies only to model bytes.
+The separate 1.25M-frame final run measured 2,611.97 ns → 1,031.25 ns p50 and 10,738.54 ns → 4,703.12 ns p95 for the complete in-memory raw sensor-to-action path. Model bytes fell from 584 to 160 (−72.60%). Test accuracy is 98.24% → 98.20%, and total false negatives are 6 → 5. Across 2,500 frozen test frames, 15 exact `GO` / `HOLD` / `BRAKE` commands differ; three cross the BRAKE boundary and all three are additional int8 BRAKE decisions. Int8 drops zero scalar BRAKE decisions and adds zero ground-truth false negatives. CPU time per inference is labeled only as an energy proxy; we did not measure or claim direct joules. Peak process RSS increased by 3.36%, so the memory reduction claim applies only to model bytes.
 
 ## Why it can win
 

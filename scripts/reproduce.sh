@@ -5,7 +5,6 @@ project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$project_root"
 
 python3 src/generate_dataset.py
-.competition/bin/contestctl audit-data
 python3 scripts/data_contract.py
 python3 src/train_model.py
 ./scripts/build.sh

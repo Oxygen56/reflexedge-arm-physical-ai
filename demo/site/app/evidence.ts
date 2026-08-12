@@ -2,41 +2,44 @@
 export const evidence = {
   "benchmark": {
     "accuracyDeltaPoints": -0.0400000000000067,
-    "actionDisagreements": 3,
-    "additionalFalseNegatives": 0,
+    "additionalFalseNegativesVsScalar": 0,
     "baseline": {
       "accuracy": 0.9824,
       "falseNegatives": 6,
       "modelBytes": 584,
-      "p50Ns": 1966.125,
-      "p95Ns": 5480.5984375,
+      "p50Ns": 2611.96875,
+      "p95Ns": 10738.5421875,
       "recall": 0.994680851,
-      "throughput": 330871.816162755
+      "throughput": 194954.654152583
     },
-    "cpuProxyReductionPercent": 78.03413888098581,
+    "brakeDecisionDisagreements": 3,
+    "cpuProxyReductionPercent": 61.534365495692356,
     "datasetSha256": "40c9395be7cc2ea20cbcd2b288d83e15e6ad9e378bbee5e9202e26cb0c6d0b26",
     "inferencesPerEnginePerTrial": 500000,
+    "int8AdditionalBrakeDecisionsVsScalar": 3,
+    "int8BrakeFalseNegativeDisagreementsVsScalar": 0,
     "modelReductionPercent": 72.6027397260274,
     "optimized": {
       "accuracy": 0.982,
       "falseNegatives": 5,
       "modelBytes": 160,
-      "p50Ns": 402.34375,
-      "p95Ns": 700.5,
+      "p50Ns": 1031.25,
+      "p95Ns": 4703.125,
       "recall": 0.995567376,
-      "throughput": 2216601.578703011
+      "throughput": 338815.679760709
     },
-    "p50Speedup": 4.886679611650486,
-    "p95Speedup": 7.823837883654532,
+    "p50Speedup": 2.5328181818181816,
+    "p95Speedup": 2.2832780730897007,
     "pairedTrialMedian": {
-      "cpuProxySpeedup": 2.7991399134716577,
-      "p50Speedup": 2.8277467411545625,
-      "p95Speedup": 3.0120481927710845,
-      "throughputSpeedup": 2.7592832107813794
+      "cpuProxySpeedup": 2.441521136204322,
+      "p50Speedup": 2.393294964028777,
+      "p95Speedup": 6.056649218760084,
+      "throughputSpeedup": 3.0253558082268084
     },
     "repeats": 500,
     "rows": 2500,
-    "throughputGainPercent": 569.92758839655,
+    "threeStateActionDisagreements": 15,
+    "throughputGainPercent": 73.79204473648106,
     "trialCount": 5
   },
   "dataset": {

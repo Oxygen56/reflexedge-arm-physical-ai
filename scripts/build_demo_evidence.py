@@ -88,8 +88,21 @@ def main() -> None:
             "cpuProxyReductionPercent": comparison["pipeline_cpu_time_proxy_reduction_percent"],
             "modelReductionPercent": comparison["model_size_reduction_percent"],
             "accuracyDeltaPoints": comparison["accuracy_delta_percentage_points"],
-            "actionDisagreements": comparison["action_disagreements"],
-            "additionalFalseNegatives": comparison["additional_false_negatives"],
+            "threeStateActionDisagreements": comparison[
+                "scalar_vs_int8_action_disagreements"
+            ],
+            "brakeDecisionDisagreements": comparison[
+                "scalar_vs_int8_brake_decision_disagreements"
+            ],
+            "int8BrakeFalseNegativeDisagreementsVsScalar": comparison[
+                "int8_brake_false_negative_disagreements_vs_scalar"
+            ],
+            "int8AdditionalBrakeDecisionsVsScalar": comparison[
+                "int8_additional_brake_decisions_vs_scalar"
+            ],
+            "additionalFalseNegativesVsScalar": comparison[
+                "additional_false_negatives_vs_scalar"
+            ],
             "datasetSha256": comparison["dataset_sha256"],
             "rows": comparison["rows"],
             "repeats": comparison["repeats"],

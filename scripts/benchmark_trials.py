@@ -61,6 +61,13 @@ def main() -> None:
 
     raw_dir = ROOT / "reports/trials"
     raw_dir.mkdir(parents=True, exist_ok=True)
+    action_metric_keys = (
+        "scalar_vs_int8_action_disagreements",
+        "scalar_vs_int8_brake_decision_disagreements",
+        "int8_brake_false_negative_disagreements_vs_scalar",
+        "int8_additional_brake_decisions_vs_scalar",
+        "additional_false_negatives_vs_scalar",
+    )
     pairs = []
     for index in range(args.trials):
         order = ["reflexedge_scalar", "reflexedge_neon"]
@@ -72,40 +79,40 @@ def main() -> None:
             results[engine] = run_engine(engine, args.repeat, output)
         baseline = results["reflexedge_scalar"]
         optimized = results["reflexedge_neon"]
-        pairs.append(
-            {
-                "trial": index + 1,
-                "order": order,
-                "kernel_p50_speedup": ratio(
-                    baseline["latency_ns"]["p50"], optimized["latency_ns"]["p50"]
-                ),
-                "kernel_p95_speedup": ratio(
-                    baseline["latency_ns"]["p95"], optimized["latency_ns"]["p95"]
-                ),
-                "kernel_throughput_speedup": ratio(
-                    optimized["throughput_per_second"], baseline["throughput_per_second"]
-                ),
-                "pipeline_p50_speedup": ratio(
-                    baseline["end_to_end"]["latency_ns"]["p50"],
-                    optimized["end_to_end"]["latency_ns"]["p50"],
-                ),
-                "pipeline_p95_speedup": ratio(
-                    baseline["end_to_end"]["latency_ns"]["p95"],
-                    optimized["end_to_end"]["latency_ns"]["p95"],
-                ),
-                "pipeline_throughput_speedup": ratio(
-                    optimized["end_to_end"]["throughput_per_second"],
-                    baseline["end_to_end"]["throughput_per_second"],
-                ),
-                "pipeline_cpu_proxy_speedup": ratio(
-                    baseline["end_to_end"]["cpu_ns_per_inference_energy_proxy"],
-                    optimized["end_to_end"]["cpu_ns_per_inference_energy_proxy"],
-                ),
-                "additional_false_negatives": optimized[
-                    "additional_false_negatives_vs_scalar"
-                ],
-            }
-        )
+        pair = {
+            "trial": index + 1,
+            "order": order,
+            "kernel_p50_speedup": ratio(
+                baseline["latency_ns"]["p50"], optimized["latency_ns"]["p50"]
+            ),
+            "kernel_p95_speedup": ratio(
+                baseline["latency_ns"]["p95"], optimized["latency_ns"]["p95"]
+            ),
+            "kernel_throughput_speedup": ratio(
+                optimized["throughput_per_second"], baseline["throughput_per_second"]
+            ),
+            "pipeline_p50_speedup": ratio(
+                baseline["end_to_end"]["latency_ns"]["p50"],
+                optimized["end_to_end"]["latency_ns"]["p50"],
+            ),
+            "pipeline_p95_speedup": ratio(
+                baseline["end_to_end"]["latency_ns"]["p95"],
+                optimized["end_to_end"]["latency_ns"]["p95"],
+            ),
+            "pipeline_throughput_speedup": ratio(
+                optimized["end_to_end"]["throughput_per_second"],
+                baseline["end_to_end"]["throughput_per_second"],
+            ),
+            "pipeline_cpu_proxy_speedup": ratio(
+                baseline["end_to_end"]["cpu_ns_per_inference_energy_proxy"],
+                optimized["end_to_end"]["cpu_ns_per_inference_energy_proxy"],
+            ),
+            **{key: optimized[key] for key in action_metric_keys},
+            "cross_engine_action_metrics_match": all(
+                baseline[key] == optimized[key] for key in action_metric_keys
+            ),
+        }
+        pairs.append(pair)
 
     metrics = {
         name: summarize([float(pair[name]) for pair in pairs])
@@ -127,8 +134,19 @@ def main() -> None:
         "all_trials_pipeline_throughput_faster": all(
             pair["pipeline_throughput_speedup"] > 1 for pair in pairs
         ),
+        "all_trials_cross_engine_action_metrics_match": all(
+            pair["cross_engine_action_metrics_match"] for pair in pairs
+        ),
+        "action_metrics_consistent_across_trials": all(
+            all(pair[key] == pairs[0][key] for key in action_metric_keys)
+            for pair in pairs
+        ),
+        "all_trials_zero_int8_brake_false_negative_disagreements": all(
+            pair["int8_brake_false_negative_disagreements_vs_scalar"] == 0
+            for pair in pairs
+        ),
         "all_trials_zero_added_false_negatives": all(
-            pair["additional_false_negatives"] == 0 for pair in pairs
+            pair["additional_false_negatives_vs_scalar"] == 0 for pair in pairs
         ),
     }
     result = {
@@ -170,6 +188,23 @@ def main() -> None:
         lines.append(
             f"| {label} | {metric['median']:.2f}× | {metric['minimum']:.2f}× | {metric['maximum']:.2f}× |"
         )
+    action_evidence = pairs[0]
+    lines.extend(
+        [
+            "",
+            "## Action agreement and BRAKE safety",
+            "",
+            "Action counts are deterministic corpus results and match across both engine reports and all paired trials.",
+            "",
+            "| Metric | Count |",
+            "| --- | ---: |",
+            f"| Full GO/HOLD/BRAKE disagreements | {action_evidence['scalar_vs_int8_action_disagreements']} |",
+            f"| BRAKE-boundary disagreements | {action_evidence['scalar_vs_int8_brake_decision_disagreements']} |",
+            f"| Int8 BRAKE false-negative disagreements vs scalar | {action_evidence['int8_brake_false_negative_disagreements_vs_scalar']} |",
+            f"| Additional int8 BRAKE decisions vs scalar | {action_evidence['int8_additional_brake_decisions_vs_scalar']} |",
+            f"| Added ground-truth false negatives vs scalar | {action_evidence['additional_false_negatives_vs_scalar']} |",
+        ]
+    )
     lines.extend(["", "## Gates", ""])
     lines.extend(f"- [{'x' if value else ' '}] {key}" for key, value in gates.items())
     args.markdown.write_text("\n".join(lines) + "\n", encoding="utf-8")

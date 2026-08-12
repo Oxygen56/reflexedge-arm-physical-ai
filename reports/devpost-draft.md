@@ -12,4 +12,4 @@
 
 The live Project overview, Project details, Additional info, and Submit steps were inspected. No AI/Codex disclosure field was present. The project story, 12 built-with tags, public evidence-demo URL, public GitHub URL, and organizer survey are saved. Final submission has not been performed.
 
-Chrome local-file access is not currently enabled for the ChatGPT browser extension, so the cover image and YouTube video upload remain pending. No file upload was reported as successful.
+Chrome local-file access has been enabled. A prior evidence video was published to YouTube, but final audit corrected its metrics, so it is not the submission asset. The corrected cover and video remain pending; no final Devpost media upload is reported as successful until the platform confirms it.

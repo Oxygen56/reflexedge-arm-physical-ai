@@ -32,6 +32,27 @@ def main() -> None:
     dataset_sha256 = hashlib.sha256(args.dataset.read_bytes()).hexdigest()
     architecture = optimized["architecture"]
     trials = load(args.trials) if args.trials.is_file() else None
+    action_metric_keys = (
+        "scalar_vs_int8_action_disagreements",
+        "scalar_vs_int8_brake_decision_disagreements",
+        "int8_brake_false_negative_disagreements_vs_scalar",
+        "int8_additional_brake_decisions_vs_scalar",
+        "additional_false_negatives_vs_scalar",
+    )
+    action_metrics = {key: int(optimized[key]) for key in action_metric_keys}
+    three_state_action_disagreements = action_metrics[
+        "scalar_vs_int8_action_disagreements"
+    ]
+    brake_decision_disagreements = action_metrics[
+        "scalar_vs_int8_brake_decision_disagreements"
+    ]
+    brake_false_negative_disagreements = action_metrics[
+        "int8_brake_false_negative_disagreements_vs_scalar"
+    ]
+    additional_brake_decisions = action_metrics[
+        "int8_additional_brake_decisions_vs_scalar"
+    ]
+    additional_false_negatives = action_metrics["additional_false_negatives_vs_scalar"]
     quality_delta_pp = (
         float(optimized["quality"]["accuracy"]) - float(baseline["quality"]["accuracy"])
     ) * 100.0
@@ -39,7 +60,17 @@ def main() -> None:
         "real_arm64_hardware": architecture in {"arm64", "aarch64"},
         "same_dataset_and_rows": baseline["dataset"] == optimized["dataset"]
         and baseline["rows"] == optimized["rows"],
-        "zero_added_safety_false_negatives": optimized["additional_false_negatives_vs_scalar"] == 0,
+        "cross_engine_action_metrics_match": all(
+            baseline[key] == optimized[key] for key in action_metric_keys
+        ),
+        "action_metrics_are_consistent": three_state_action_disagreements
+        >= brake_decision_disagreements
+        and brake_decision_disagreements
+        == brake_false_negative_disagreements + additional_brake_decisions
+        and additional_false_negatives <= brake_false_negative_disagreements,
+        "zero_int8_brake_false_negative_disagreements": brake_false_negative_disagreements
+        == 0,
+        "zero_added_safety_false_negatives": additional_false_negatives == 0,
         "accuracy_loss_within_half_point": quality_delta_pp >= -0.5,
         "optimized_p95_is_faster": optimized["latency_ns"]["p95"] < baseline["latency_ns"]["p95"],
         "optimized_model_is_smaller": optimized["model_bytes"] < baseline["model_bytes"],
@@ -90,8 +121,14 @@ def main() -> None:
         "accuracy_delta_percentage_points": quality_delta_pp,
         "baseline_quality": baseline["quality"],
         "optimized_quality": optimized["quality"],
-        "action_disagreements": optimized["scalar_vs_int8_action_disagreements"],
-        "additional_false_negatives": optimized["additional_false_negatives_vs_scalar"],
+        **action_metrics,
+        "action_disagreement_definitions": {
+            "scalar_vs_int8_action_disagreements": "any different GO, HOLD, or BRAKE command",
+            "scalar_vs_int8_brake_decision_disagreements": "either engine crosses the BRAKE versus non-BRAKE boundary",
+            "int8_brake_false_negative_disagreements_vs_scalar": "scalar commands BRAKE while int8 commands GO or HOLD",
+            "int8_additional_brake_decisions_vs_scalar": "int8 commands BRAKE while scalar commands GO or HOLD",
+            "additional_false_negatives_vs_scalar": "ground-truth brake case where scalar commands BRAKE and int8 does not",
+        },
         "energy_statement": "CPU time per inference is an energy proxy. Direct joules were not measured.",
         "benchmark_scope": {
             "kernel": optimized["latency_scope"],
@@ -139,7 +176,19 @@ def main() -> None:
         f"| Model bytes | {baseline['model_bytes']} | {optimized['model_bytes']} | {comparison['model_size_reduction_percent']:.1f}% lower |",
         f"| Peak RSS | {baseline['peak_rss_bytes']} | {optimized['peak_rss_bytes']} | {comparison['peak_rss_change_percent']:+.1f}% |",
         f"| Accuracy | {baseline['quality']['accuracy']:.5f} | {optimized['quality']['accuracy']:.5f} | {quality_delta_pp:+.3f} pp |",
-        f"| False negatives | {baseline['quality']['false_negative']} | {optimized['quality']['false_negative']} | added: {comparison['additional_false_negatives']} |",
+        f"| Total ground-truth false negatives | {baseline['quality']['false_negative']} | {optimized['quality']['false_negative']} | newly introduced cases: {additional_false_negatives} |",
+        "",
+        "## Action agreement and BRAKE safety",
+        "",
+        "These counts use the same frozen test frames but answer different questions. Full action agreement compares all three commands; the safety gate is directional and asks whether int8 ever drops a scalar BRAKE.",
+        "",
+        "| Metric | Count | Definition |",
+        "| --- | ---: | --- |",
+        f"| Full three-state action disagreements | {three_state_action_disagreements} | Scalar and int8 emit different `GO` / `HOLD` / `BRAKE` commands |",
+        f"| BRAKE-boundary disagreements | {brake_decision_disagreements} | One engine emits `BRAKE` and the other emits `GO` or `HOLD` |",
+        f"| Int8 BRAKE false-negative disagreements vs scalar | {brake_false_negative_disagreements} | Scalar emits `BRAKE`; int8 emits `GO` or `HOLD` |",
+        f"| Additional int8 BRAKE decisions vs scalar | {additional_brake_decisions} | Int8 emits `BRAKE`; scalar emits `GO` or `HOLD` |",
+        f"| Added ground-truth false negatives vs scalar | {additional_false_negatives} | True brake label, scalar emits `BRAKE`, and int8 emits `GO` or `HOLD` |",
         "",
         "## Independent process trials",
         "",
