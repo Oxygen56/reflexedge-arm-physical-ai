@@ -13,13 +13,21 @@
 
 ## Remaining external actions
 
-1. Solve the Devpost image CAPTCHA after explicit user authorization.
-2. Create the `ReflexEdge` Devpost draft and inspect every live field.
-3. Stop before any AI/Codex disclosure field and obtain exact wording approval.
-4. Upload the evidence video to a public YouTube, Vimeo, or Youku account after action-time confirmation; verify anonymous playback and duration.
-5. Populate and save the Devpost draft from the verified field map.
-6. Re-run rights, publication, and package gates against final URLs.
-7. Review the complete live submission with the user and obtain final-submit confirmation.
-8. Submit and retain the public project URL plus submission receipt evidence.
+1. After action-time confirmation, populate and save the verified Devpost story, tags, links, survey answers, and cover image.
+2. Upload the evidence video publicly to the logged-in YouTube channel `Oxygen 998` after action-time confirmation; verify anonymous playback and duration.
+3. Add the verified YouTube URL to the Devpost draft.
+4. Re-run rights, publication, and package gates against final URLs.
+5. Review the complete live submission with the user and obtain final-submit confirmation.
+6. Accept the final rules checkbox, submit, and retain the public project URL plus submission receipt evidence.
+
+## Live Devpost field audit
+
+- Draft ID: `1134298`
+- Draft slug: `1134298-reflexedge`
+- Project overview saved: `ReflexEdge` / `A brake reflex you can audit.`
+- Project details asks for story, up to 25 built-with tags, try-it-out links, gallery images, and a video URL.
+- Additional info asks only project-building and future-use survey questions.
+- Finalization asks for the Official Rules and Devpost Terms agreement.
+- No AI, Codex, generative-AI, or automated-assistance disclosure field appeared in any live step.
 
 No draft, upload, AI disclosure response, or final submission should be reported as completed without its authoritative page-level confirmation.
