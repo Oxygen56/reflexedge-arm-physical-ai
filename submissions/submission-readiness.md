@@ -13,8 +13,8 @@
 
 ## Remaining external actions
 
-1. After action-time confirmation, populate and save the verified Devpost story, tags, links, survey answers, and cover image.
-2. Upload the evidence video publicly to the logged-in YouTube channel `Oxygen 998` after action-time confirmation; verify anonymous playback and duration.
+1. Enable local-file access for the ChatGPT Chrome extension.
+2. Upload the Devpost cover image and the evidence video to the logged-in YouTube channel `Oxygen 998`; verify anonymous playback and duration.
 3. Add the verified YouTube URL to the Devpost draft.
 4. Re-run rights, publication, and package gates against final URLs.
 5. Review the complete live submission with the user and obtain final-submit confirmation.
@@ -25,6 +25,8 @@
 - Draft ID: `1134298`
 - Draft slug: `1134298-reflexedge`
 - Project overview saved: `ReflexEdge` / `A brake reflex you can audit.`
+- Current Devpost progress: `4/5 steps done`.
+- Project story, 12 built-with tags, evidence-demo URL, GitHub URL, and organizer survey are saved.
 - Project details asks for story, up to 25 built-with tags, try-it-out links, gallery images, and a video URL.
 - Additional info asks only project-building and future-use survey questions.
 - Finalization asks for the Official Rules and Devpost Terms agreement.
