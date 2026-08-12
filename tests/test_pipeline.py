@@ -437,6 +437,64 @@ class PipelineTests(unittest.TestCase):
         self.assertTrue(checks["model_bytes"])
         self.assertTrue(checks["accuracy"])
 
+    def test_publication_display_rounding_matches_javascript(self) -> None:
+        validator = load_publication_validator()
+        from scripts.performance_snapshot import build_performance_snapshot
+
+        self.assertEqual(validator.javascript_to_fixed(4703.125, 2), "4703.13")
+        load = lambda path: json.loads((PROJECT / path).read_text(encoding="utf-8"))
+        snapshot = build_performance_snapshot(
+            load("reports/comparison.json"),
+            load("reports/baseline.json"),
+            load("reports/optimized.json"),
+            load("reports/trials.json"),
+        )
+        current_page = (
+            "<strong>6.06×</strong><p>median p95 · raw sensor → action</p>"
+            "<span>P95 · FINAL RUN</span><div><del>10738.54 ns</del>"
+            "<strong>4703.13 ns</strong></div>"
+            "<span>MODEL BYTES</span><div><del>584 B</del><strong>160 B</strong></div>"
+            "<span>ACCURACY</span><div><del>98.24%</del><strong>98.20%</strong></div>"
+        ).encode()
+        self.assertTrue(
+            all(validator.demo_performance_checks(current_page, snapshot).values())
+        )
+
+    def test_github_api_rate_limit_uses_anonymous_git_and_remains_fail_closed(self) -> None:
+        validator = load_publication_validator()
+        local_head = "a" * 40
+
+        def rate_limited(url):
+            raise validator.urllib.error.HTTPError(
+                url, 403, "API rate limit exceeded", {}, None
+            )
+
+        proof = {
+            "source": "anonymous_git_ls_remote",
+            "default_branch": "main",
+            "remote_head": local_head,
+            "url": validator.REPOSITORY_GIT_URL,
+        }
+        checks, failures = validator.github_publication_checks(
+            local_head,
+            fetcher=rate_limited,
+            git_probe=lambda: proof,
+        )
+        self.assertEqual(failures, [])
+        self.assertEqual(checks["repository"]["source"], "anonymous_git_ls_remote")
+        self.assertEqual(checks["commit"]["remote_head"], local_head)
+
+        stale = {**proof, "remote_head": "b" * 40}
+        _, failures = validator.github_publication_checks(
+            local_head,
+            fetcher=rate_limited,
+            git_probe=lambda: stale,
+        )
+        self.assertIn(
+            "public repository head does not match the validated local commit",
+            failures,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

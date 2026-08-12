@@ -12,6 +12,7 @@ demo/video/frames/
 demo/video/contact-sheet.png
 experiments/runs/
 submissions/*.zip
+buidl/package/
 demo/captures/private/
 *.mov
 *.mp4

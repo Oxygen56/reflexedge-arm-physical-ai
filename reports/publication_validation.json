@@ -1,22 +1,29 @@
 {
-  "checked_at": "2026-08-12T11:19:06.438997+00:00",
+  "checked_at": "2026-08-12T12:38:38.300490+00:00",
   "checks": {
     "commit": {
-      "local_head": "b15f39b94ef61ad7e8196d9ebd2befc5a7858339",
-      "remote_head": "b15f39b94ef61ad7e8196d9ebd2befc5a7858339",
-      "status": 200
+      "api_status": 403,
+      "local_head": "2be8f501d2bc74766045df291c5635f68a45755d",
+      "remote_head": "2be8f501d2bc74766045df291c5635f68a45755d",
+      "source": "anonymous_git_ls_remote"
     },
     "demo": {
       "action_markers": {
-        "added_ground_truth_fn": false,
-        "additional_int8_brake": false,
-        "brake_boundary": false,
-        "missed_scalar_brake": false,
-        "three_state": false
+        "added_ground_truth_fn": true,
+        "additional_int8_brake": true,
+        "brake_boundary": true,
+        "missed_scalar_brake": true,
+        "three_state": true
       },
       "content_type": "text/html; charset=utf-8",
       "current_metric_marker": true,
       "dataset_marker": true,
+      "performance_markers": {
+        "accuracy": true,
+        "final_run_p95": true,
+        "headline_p95": true,
+        "model_bytes": true
+      },
       "reflexedge_marker": true,
       "status": 200
     },
@@ -26,16 +33,18 @@
       "status": 200
     },
     "repository": {
+      "anonymous_public_read": true,
+      "api_status": 403,
       "default_branch": "main",
-      "private": false,
-      "status": 200,
-      "url": "https://github.com/Oxygen56/reflexedge-arm-physical-ai"
+      "remote_head": "2be8f501d2bc74766045df291c5635f68a45755d",
+      "source": "anonymous_git_ls_remote",
+      "url": "https://github.com/Oxygen56/reflexedge-arm-physical-ai.git"
     },
     "video": {
       "content_type": "application/octet-stream",
-      "matches_local": false,
-      "sha256": "769d7f2c33ee9ff6a82ab48245190321f2df2c794d4ec2b315a752e9ad7b2b5e",
-      "size_bytes": 2310508,
+      "matches_local": true,
+      "sha256": "087e95a70377ec28e93925dc88fdc2e14b7df9935ace56dbdc5d62633b1cad1f",
+      "size_bytes": 2315711,
       "status": 200
     }
   },
@@ -47,11 +56,34 @@
       "scalar_vs_int8_action_disagreements": 15,
       "scalar_vs_int8_brake_decision_disagreements": 3
     },
+    "performance_snapshot": {
+      "final_run": {
+        "accuracy_delta_percentage_points": -0.0400000000000067,
+        "baseline_accuracy": 0.9824,
+        "baseline_cpu_proxy_ns_per_inference": 2537.5336,
+        "baseline_model_bytes": 584,
+        "baseline_pipeline_p95_ns": 10738.5421875,
+        "baseline_throughput_per_second": 194954.654152583,
+        "inferences_per_engine": 1250000,
+        "model_size_reduction_percent": 72.6027397260274,
+        "optimized_accuracy": 0.982,
+        "optimized_cpu_proxy_ns_per_inference": 976.0784,
+        "optimized_model_bytes": 160,
+        "optimized_pipeline_p95_ns": 4703.125,
+        "optimized_throughput_per_second": 338815.679760709,
+        "peak_rss_change_percent": 3.361344537815126,
+        "pipeline_cpu_time_proxy_reduction_percent": 61.534365495692356,
+        "pipeline_p95_speedup": 2.2832780730897007,
+        "pipeline_throughput_gain_percent": 73.79204473648106
+      },
+      "headline": {
+        "paired_trial_count": 5,
+        "pipeline_p95_speedup_median": 6.056649218760084
+      },
+      "schema": "reflexedge.video-performance.v1"
+    },
     "video_sha256": "087e95a70377ec28e93925dc88fdc2e14b7df9935ace56dbdc5d62633b1cad1f"
   },
-  "failures": [
-    "public evidence video is missing or unexpectedly small",
-    "public evidence demo is unavailable or does not match local metrics"
-  ],
-  "ok": false
+  "failures": [],
+  "ok": true
 }

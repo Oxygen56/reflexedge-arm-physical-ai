@@ -1,9 +1,6 @@
 {
-  "failures": [
-    "public repository, demo, or video availability gate failed",
-    "publication validation is stale for the current performance, action metrics, or video"
-  ],
-  "ok": false,
+  "failures": [],
+  "ok": true,
   "required_files": [
     "README.md",
     "LICENSE",

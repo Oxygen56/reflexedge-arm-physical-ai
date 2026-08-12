@@ -47,7 +47,7 @@ The primary result comes from five independent processes per engine, with execut
 | throughput | 3.03× | 2.11× | 7.41× |
 | CPU-time proxy | 2.44× | 2.28× | 2.69× |
 
-The separate 1.25M-frame final run measured 2,611.97 ns → 1,031.25 ns p50 and 10,738.54 ns → 4,703.12 ns p95 for the complete in-memory raw sensor-to-action path. Model bytes fell from 584 to 160 (−72.60%). Test accuracy is 98.24% → 98.20%, and total false negatives are 6 → 5. Across 2,500 frozen test frames, 15 exact `GO` / `HOLD` / `BRAKE` commands differ; three cross the BRAKE boundary and all three are additional int8 BRAKE decisions. Int8 drops zero scalar BRAKE decisions and adds zero ground-truth false negatives. CPU time per inference is labeled only as an energy proxy; we did not measure or claim direct joules. Peak process RSS increased by 3.36%, so the memory reduction claim applies only to model bytes.
+The separate 1.25M-frame final run measured 2,611.97 ns → 1,031.25 ns p50 and 10,738.54 ns → 4,703.13 ns p95 (raw value: 4,703.125 ns) for the complete in-memory raw sensor-to-action path. Model bytes fell from 584 to 160 (−72.60%). Test accuracy is 98.24% → 98.20%, and total false negatives are 6 → 5. Across 2,500 frozen test frames, 15 exact `GO` / `HOLD` / `BRAKE` commands differ; three cross the BRAKE boundary and all three are additional int8 BRAKE decisions. Int8 drops zero scalar BRAKE decisions and adds zero ground-truth false negatives. CPU time per inference is labeled only as an energy proxy; we did not measure or claim direct joules. Peak process RSS increased by 3.36%, so the memory reduction claim applies only to model bytes.
 
 ## Why it can win
 
