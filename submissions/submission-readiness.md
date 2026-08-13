@@ -9,14 +9,13 @@
 - The corrected rights-clean 62.4-second 1080p H.264 evidence video is public at https://youtu.be/hFZvz4ntvbc; anonymous oEmbed and the YouTube publication receipt confirm its title and availability. It displays the explicit action/safety counts `15 / 3 / 0 / 3 / 0`.
 - Rights gate passes with no failures.
 - The corrected public repository evidence and judge demo are live. Publication and BUIDL package gates pass against the public commit, video asset, license, site, and current metrics.
-- Devpost write-up, field map, cover image, video metadata, reproducibility instructions, Arm64 hardware evidence, paired-trial logs, and claim boundaries are ready.
+- Devpost write-up, field map, cover image, video metadata, reproducibility instructions, Arm64 hardware evidence, paired-trial logs, and claim boundaries are ready. The project thumbnail is uploaded and the live finalization page renders the Devpost CDN image instead of the placeholder.
 
 ## Remaining external actions
 
 1. Complete or verify the required Arm Developer Program registration, verified email, profile, `Join`, and dashboard access using the intended email.
-2. Upload the prepared project thumbnail to Devpost; the finalization page still shows a placeholder.
-3. Review the complete live submission with the user and obtain final-submit confirmation.
-4. Accept the final rules checkbox, submit, and retain the public project URL plus submission receipt evidence.
+2. Review the complete live submission with the user and obtain final-submit confirmation.
+3. Accept the final rules checkbox, submit, and retain the public project URL plus submission receipt evidence.
 
 ## Live Devpost field audit
 
@@ -28,6 +27,7 @@
 - Project details asks for story, up to 25 built-with tags, try-it-out links, gallery images, and a video URL.
 - Additional info asks only project-building and future-use survey questions.
 - Finalization asks for the Official Rules and Devpost Terms agreement.
+- The finalization-page thumbnail is live at `https://d112y698adiu2z.cloudfront.net/photos/production/software_thumbnail_photos/005/095/654/datas/medium.png`; the rules checkbox remains unchecked and the project remains a `4/5` draft.
 - No AI, Codex, generative-AI, or automated-assistance disclosure field appeared in any live step.
 - Official rules also require Arm Developer Program registration, verified email, completed profile, `Join`, and dashboard access using the intended email; this has not yet been verified in the live account.
 
